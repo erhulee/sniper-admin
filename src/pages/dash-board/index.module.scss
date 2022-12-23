@@ -1,0 +1,40 @@
+.page{
+    width: 100vw;
+    height: 100vh;
+    background-color: red;
+
+    .header{
+        display: flex;
+        justify-content: space-between;
+        .left{
+            display: flex;
+            align-items: center;
+            .logo{
+                width: 30px;
+                height: 30px;
+            } 
+            .name{
+                color: white;
+                margin-left: 2rem;
+                font-weight: bold;
+            } 
+        }
+
+        .right{
+            .btn{
+                margin-left: 10px;
+            }
+        }
+
+    }
+}
+
+
+.modal{
+    :global{
+            .ant-btn-primary{
+                background-color: #673281;
+            }
+
+    }
+}
