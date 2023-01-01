@@ -26,6 +26,11 @@
                 flex: 1;
                 margin-right: 10px;
             }
+            :global{
+                .ant-btn-primary{
+                    background-color: #673281;
+                }
+            }
         }
         .forget{
             color: gray;

@@ -1,11 +1,14 @@
+
 .page{
     width: 100vw;
     height: 100vh;
     background-color: red;
-
+    --backgroundColor: #252226;
+    --primaryColor:  #673281;
     .header{
         display: flex;
         justify-content: space-between;
+        background-color: var(--backgroundColor);
         .left{
             display: flex;
             align-items: center;
@@ -27,13 +30,19 @@
         }
 
     }
+
+    :global{
+        .ant-layout-sider-trigger{
+            background-color: var(--backgroundColor);
+        }
+    }
 }
 
 
 .modal{
     :global{
             .ant-btn-primary{
-                background-color: #673281;
+                background-color: var(--primaryColor);
             }
 
     }

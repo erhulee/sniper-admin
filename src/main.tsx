@@ -6,11 +6,12 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Login from './pages/login';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, theme } from 'antd';
 import DashBoard from './pages/dash-board';
 import Performance from './pages/performance';
 import "tailwindcss/tailwind.css"
 import "./index.css"
+import Errors from './pages/errors';
 // import "tailwindcss"
 const router = createBrowserRouter([
   {
@@ -20,17 +21,26 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <DashBoard></DashBoard>,
-    children:[{
+    children:[
+      {
       path: "performance",
       element: <Performance></Performance>
-    }]
+      },
+      {
+        path: "error",
+        element: <Errors></Errors>
+      }
+  
+  ]
   }
 ]);
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ConfigProvider theme={{
       token:{
-        colorPrimary:"#673281"
+        colorPrimary:"#673281",
+        colorFillContent: "#252226"
+        
       }
     }} >
       <RouterProvider router={router} />

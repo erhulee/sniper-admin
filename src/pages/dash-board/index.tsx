@@ -3,6 +3,8 @@ import {
   NotificationOutlined,
   UserOutlined,
   PlusSquareOutlined,
+  RadarChartOutlined,
+  ExclamationCircleOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
 import { Button, MenuProps } from "antd";
@@ -13,6 +15,12 @@ import styles from "./index.module.scss";
 import logo from "../../assets/logo.png";
 import ProjectFormModal from "./project-form-modal";
 import useModal from "./useModal";
+import PerformanceIcon from "../../assets/icons/PerformanceIcon";
+import ErrorIcon from "../../assets/icons/ErrorIcon";
+import UserIcon from "../../assets/icons/UserIcon";
+import { useState } from "react";
+import { useLocation, useNavigate, useResolvedPath } from "react-router-dom";
+import useBreadcrumb from "../../hooks/useBreadcrumb";
 const { Header, Content, Sider } = Layout;
 
 function PageHeader() {
@@ -48,52 +56,63 @@ function PageHeader() {
   );
 }
 
-const items2: MenuProps["items"] = [
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-].map((icon, index) => {
-  const key = String(index + 1);
-
-  return {
-    key: `sub${key}`,
-    icon: React.createElement(icon),
-    label: `subnav ${key}`,
-
-    children: new Array(4).fill(null).map((_, j) => {
-      const subKey = index * 4 + j + 1;
-      return {
-        key: subKey,
-        label: `option${subKey}`,
-      };
-    }),
-  };
-});
+const menuItems = [
+  {
+    key:"performance",
+    icon:React.createElement(RadarChartOutlined),
+    label:"性能分析"
+  },
+  {
+    key:"error",
+    icon:React.createElement(ExclamationCircleOutlined ),
+    label:"错误收集"
+  },
+  {
+    key:"user",
+    icon:React.createElement(UserOutlined),
+    label:"埋点数据"
+  }
+]
 
 const DashBoard: React.FC = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  const navigate = useNavigate()
+  const [collapsed, setCollapsed] = useState(false);
+  const breadcrumb = useBreadcrumb()
   return (
     <div className={styles.page}>
       <Layout style={{ height: "100vh" }}>
         <PageHeader></PageHeader>
         <Layout>
-          <Sider width={200} style={{ background: colorBgContainer }}>
+          <Sider
+            collapsed={collapsed} 
+            onCollapse={(value) => setCollapsed(value)} 
+            collapsible 
+            width={200} 
+            style={{ background: colorBgContainer }}>
             <Menu
+            // mode="inline"
+              onClick={(e)=>{
+                const key = e.key;
+                //TODO 可能有的需要从 kaypath 得到一个path
+                const path = key;
+                navigate(path)
+
+              }}
+        
               mode="inline"
               defaultSelectedKeys={["1"]}
               defaultOpenKeys={["sub1"]}
               style={{ height: "100%", borderRight: 0 }}
-              items={items2}
+              items={menuItems}
             />
           </Sider>
           <Layout style={{ padding: "0 24px 24px" }}>
             <Breadcrumb style={{ margin: "16px 0" }}>
-              <Breadcrumb.Item>Home</Breadcrumb.Item>
-              <Breadcrumb.Item>List</Breadcrumb.Item>
-              <Breadcrumb.Item>App</Breadcrumb.Item>
+              {breadcrumb.map(i=><Breadcrumb.Item>{i}</Breadcrumb.Item>)}
             </Breadcrumb>
             <Content
               style={{
