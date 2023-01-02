@@ -15,5 +15,5 @@ export default function () {
         fill="currentColor"
       ></path>
     </svg>
-  );
+  )
 }

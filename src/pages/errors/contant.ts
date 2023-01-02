@@ -1,3 +1,3 @@
-export const type2tagColor:{[key:string]: string} = {
-    "JS Error": "red"
+export const type2tagColor: { [key: string]: string } = {
+  'JS Error': 'red'
 }

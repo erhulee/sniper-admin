@@ -19,5 +19,5 @@ export default function () {
         p-id="5165"
       ></path>
     </svg>
-  );
+  )
 }

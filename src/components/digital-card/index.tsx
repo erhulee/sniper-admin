@@ -1,13 +1,13 @@
 type Props = {
-  icon?: JSX.Element;
-  value: number;
-  specific: string;
-  direction: "vertical" | "horizontal";
-  unit?: string;
-  className?: string;
-};
+  icon?: JSX.Element
+  value: number
+  specific: string
+  direction: 'vertical' | 'horizontal'
+  unit?: string
+  className?: string
+}
 function DigitalCard(props: Props) {
-  const { icon, value, specific, direction, className, unit } = props;
+  const { icon, value, specific, direction, className, unit } = props
   return (
     <div className={`${className} flex flex-col justify-center items-center `}>
       <div>
@@ -16,9 +16,9 @@ function DigitalCard(props: Props) {
       </div>
       <div>
         <span> {icon}</span>
-        <span className=" text-sm ml-1 text-gray-600" >{specific}</span>
+        <span className=" text-sm ml-1 text-gray-600">{specific}</span>
       </div>
     </div>
-  );
+  )
 }
-export default DigitalCard;
+export default DigitalCard

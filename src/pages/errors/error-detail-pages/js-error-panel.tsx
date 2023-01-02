@@ -1,11 +1,11 @@
-import { Button, TimePicker } from "antd";
-import { RightOutlined, LeftOutlined } from "@ant-design/icons";
-import DigitalCard from "../../../components/digital-card";
-import WindowsIcon from "../../../assets/icons/WindowsIcon";
-import MacIcon from "../../../assets/icons/MacIcon";
-import { bar } from "../fakeData";
-import { Column } from "@ant-design/charts";
-import TimeFilter from "../../../components/time-filter";
+import { Button, TimePicker } from 'antd'
+import { RightOutlined, LeftOutlined } from '@ant-design/icons'
+import DigitalCard from '../../../components/digital-card'
+import WindowsIcon from '../../../assets/icons/WindowsIcon'
+import MacIcon from '../../../assets/icons/MacIcon'
+import { bar } from '../fakeData'
+import { Column } from '@ant-design/charts'
+import TimeFilter from '../../../components/time-filter'
 const RangePicker = TimePicker.RangePicker
 function Title() {
   return (
@@ -22,10 +22,10 @@ function Title() {
         </div>
 
         <div className="mt-2">
-          <Button style={{ marginRight: "10px" }} type="primary">
+          <Button style={{ marginRight: '10px' }} type="primary">
             解决
           </Button>
-          <Button style={{ marginRight: "10px" }}>忽略</Button>
+          <Button style={{ marginRight: '10px' }}>忽略</Button>
           <Button
             type="link"
             className=" text-indigo-400 hover:text-indigo-300"
@@ -44,7 +44,7 @@ function Title() {
         <Button icon={<RightOutlined />} type="primary"></Button>
       </div>
     </div>
-  );
+  )
 }
 
 function EnvCard() {
@@ -56,7 +56,7 @@ function EnvCard() {
         (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36
       </div>
     </div>
-  );
+  )
 }
 
 function ErrorStack() {
@@ -68,39 +68,39 @@ function ErrorStack() {
         (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36
       </div>
     </div>
-  );
+  )
 }
 
-function BarChart(){
-    const config = {
-        data: bar,
-        xField: '城市',
-        yField: '销售额',
-        xAxis: {
-          label: {
-            autoRotate: false,
-          },
-        },
-        slider: {
-          start: 0.1,
-          end: 0.2,
-        },
-        // autoFit: true,
-        width:100
-      };
-    
-      return <Column {...config} />;
+function BarChart() {
+  const config = {
+    data: bar,
+    xField: '城市',
+    yField: '销售额',
+    xAxis: {
+      label: {
+        autoRotate: false
+      }
+    },
+    slider: {
+      start: 0.1,
+      end: 0.2
+    },
+    // autoFit: true,
+    width: 100
+  }
+
+  return <Column {...config} />
 }
 function JsErrorPanel() {
   return (
     <div className="flex">
-      <div style={{ flexGrow: "3", flexBasis:"1" }}  className="flex-1">
+      <div style={{ flexGrow: '3', flexBasis: '1' }} className="flex-1">
         <Title></Title>
         <EnvCard></EnvCard>
         <ErrorStack></ErrorStack>
       </div>
 
-      <div style={{ flexGrow: "2", flexBasis:"1" }} className="ml-4 flex-1">
+      <div style={{ flexGrow: '2', flexBasis: '1' }} className="ml-4 flex-1">
         <div className=" font-semibold">总体概览</div>
         <div className="grid grid-cols-2 gap-4 mt-4">
           <DigitalCard
@@ -119,24 +119,23 @@ function JsErrorPanel() {
           />
         </div>
 
-        <div className="flex justify-around items-center p-4 bg-primary-100 mt-5 rounded-lg " >
-            <div className="text-xl flex items-center text-primary" >
-                <WindowsIcon/>
-                <span className="ml-2" >200</span>
-            </div>
-            <div className="text-xl flex items-center text-primary" >
-                <MacIcon/>
-                <span className="ml-2" >200</span>
-            </div>
+        <div className="flex justify-around items-center p-4 bg-primary-100 mt-5 rounded-lg ">
+          <div className="text-xl flex items-center text-primary">
+            <WindowsIcon />
+            <span className="ml-2">200</span>
+          </div>
+          <div className="text-xl flex items-center text-primary">
+            <MacIcon />
+            <span className="ml-2">200</span>
+          </div>
         </div>
 
         <div>
-            <TimeFilter className="my-5" ></TimeFilter>
-            <BarChart ></BarChart>
+          <TimeFilter className="my-5"></TimeFilter>
+          <BarChart></BarChart>
         </div>
-
       </div>
     </div>
-  );
+  )
 }
-export default JsErrorPanel;
+export default JsErrorPanel

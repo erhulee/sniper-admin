@@ -29,5 +29,5 @@ export default function IconSmile() {
         fill="#34c01b"
       ></path>
     </svg>
-  );
+  )
 }

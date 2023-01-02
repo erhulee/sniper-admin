@@ -1,53 +1,51 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import 'antd/dist/reset.css';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import Login from './pages/login';
-import { ConfigProvider, theme } from 'antd';
-import DashBoard from './pages/dash-board';
-import Performance from './pages/performance';
-import "tailwindcss/tailwind.css"
-import "./index.scss"
-import Errors from './pages/errors';
-import JsErrorPanel from './pages/errors/error-detail-pages/js-error-panel';
+import 'antd/dist/reset.css'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import Login from './pages/login'
+import { ConfigProvider, theme } from 'antd'
+import DashBoard from './pages/dash-board'
+import Performance from './pages/performance'
+import 'tailwindcss/tailwind.css'
+import './index.scss'
+import Errors from './pages/errors'
+import JsErrorPanel from './pages/errors/error-detail-pages/js-error-panel'
 // import "tailwindcss"
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Login></Login>,
+    path: '/',
+    element: <Login></Login>
   },
   {
-    path: "/dashboard",
+    path: '/dashboard',
     element: <DashBoard></DashBoard>,
-    children:[
+    children: [
       {
-      path: "performance",
-      element: <Performance></Performance>
+        path: 'performance',
+        element: <Performance></Performance>
       },
       {
-        path: "error",
+        path: 'error',
         element: <Errors></Errors>
       },
       {
-        path: "error/js/:id",
+        path: 'error/js/:id',
         element: <JsErrorPanel></JsErrorPanel>
       }
-  
-  ]
+    ]
   }
-]);
+])
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ConfigProvider theme={{
-      token:{
-        colorPrimary:"#673281",
-        colorFillContent: "#252226"
-      }
-    }} >
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#673281',
+          colorFillContent: '#252226'
+        }
+      }}
+    >
       <RouterProvider router={router} />
     </ConfigProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 )
