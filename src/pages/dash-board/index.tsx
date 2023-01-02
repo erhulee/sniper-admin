@@ -81,7 +81,9 @@ const DashBoard: React.FC = () => {
 
   const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false);
-  const breadcrumb = useBreadcrumb()
+  const breadcrumb = useBreadcrumb();
+  const multiCardPage = ["运行时错误"];
+  // const computedBgColor = multiCardPage.includes(breadcrumb[breadcrumb.length - 1]) ?  undefined:colorBgContainer;
   return (
     <div className={styles.page}>
       <Layout style={{ height: "100vh" }}>

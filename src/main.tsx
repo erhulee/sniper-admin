@@ -10,8 +10,9 @@ import { ConfigProvider, theme } from 'antd';
 import DashBoard from './pages/dash-board';
 import Performance from './pages/performance';
 import "tailwindcss/tailwind.css"
-import "./index.css"
+import "./index.scss"
 import Errors from './pages/errors';
+import JsErrorPanel from './pages/errors/error-detail-pages/js-error-panel';
 // import "tailwindcss"
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "error",
         element: <Errors></Errors>
+      },
+      {
+        path: "error/js/:id",
+        element: <JsErrorPanel></JsErrorPanel>
       }
   
   ]
@@ -40,7 +45,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       token:{
         colorPrimary:"#673281",
         colorFillContent: "#252226"
-        
       }
     }} >
       <RouterProvider router={router} />

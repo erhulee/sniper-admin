@@ -1,74 +1,123 @@
-import type { ColumnsType } from "antd/es/table";
-import { Table } from "antd";
+import { Button, List, Tag } from "antd";
+import { type2tagColor } from "./contant";
+import { bar } from "./fakeData";
+import { Column } from "@ant-design/charts";
+import { useNavigate } from "react-router-dom";
 interface DataType {
-    type: "JS Error"
-    name: string,
-    // 发生错误的细节
-    detail?: string,
-    datetime: Date,
+  id: string
+  type: "JS Error";
+  name: string;
+  // 发生错误的细节
+  detail?: string;
+  datetime: {
+    format: string,
+    raw: Date
+  }
 
-    // 按照全局粒度降级的数据
-    countList: Array<{
-        datetime: Date,
-        count: number
-    }> 
+  // 按照全局粒度降级的数据
+  countList: Array<{
+    datetime: {
+      format: string,
+      raw: Date
+    }
+    count: number;
+  }>;
 
-    countAll: number,
+  countAll: number;
 }
-
+function BarChart() {
+  return (
+    <Column
+      data={bar}
+      xField="城市"
+      yField="销售额"
+      xAxis={{
+        tickLine: null,
+      }}
+      yAxis={{
+        tickLine: null,
+        tickCount: 0,
+      }}
+      autoFit={true}
+      height={100}
+    />
+  );
+}
 function ErrorListTable() {
   const errorList: DataType[] = [
     {
-        type:"JS Error",
-        name:"CustomizeError",
-        datetime: new Date(),
-        countList:[
-            {
-                datetime: new Date(),
-                count:1
-            }
-        ],
-        countAll:1
+      id: "1",
+      type: "JS Error",
+      name: "CustomizeError",
+      datetime: {
+        format:"2023/01/02",
+        raw: new Date(),
+      },
+      countList: [
+        {
+          datetime: {
+            format:"2023/01/02",
+            raw: new Date(),
+          },
+          count: 1,
+        },
+      ],
+      countAll: 1,
+    },
+    {
+      id: "1",
+      type: "JS Error",
+      name: "CustomizeError",
+      datetime: {
+        format:"2023/01/02",
+        raw: new Date(),
+      },
+      countList: [
+        {
+          datetime: {
+            format:"2023/01/02",
+            raw: new Date(),
+          },
+          count: 1,
+        },
+      ],
+      countAll: 1,
     },
   ];
-  const columns: ColumnsType<DataType> = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      render: (text: string) => <a>{text}</a>,
-    },
-    {
-      title: "Age",
-      dataIndex: "age",
-    },
-    {
-      title: "发生次数",
-      dataIndex: "countAll",
-    },
-  ];
+  const navigate = useNavigate();
 
-  const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-    getCheckboxProps: (record: DataType) => ({
-      disabled: record.name === "Disabled User", // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
+  const handleClick = (item: DataType)=>{
+    const {type, id} = item;
+    if(type == "JS Error"){
+      navigate(`js/${id}`)
+    }
+  }
+
   return (
-    <Table
-      rowSelection={{
-        type: "checkbox",
-        ...rowSelection,
-      }}
-      columns={columns}
-      dataSource={errorList}
-    />
+    <div>
+      <List
+        itemLayout="horizontal"
+        dataSource={errorList}
+        renderItem={(item) => (
+          <List.Item>
+            <List.Item.Meta
+              title={
+                <span>
+                  <Tag color={type2tagColor[item.type]}>{item.type}</Tag>
+                  <span style={{marginRight:"5px"}} >{item.datetime.format}</span>
+                  <a href="https://ant.design">{item.name}</a>
+                </span>
+              }
+              description={item.detail}
+            />
+            <div style={{ flex: "3", marginRight: "50px", marginLeft: "50px" }}>
+              <BarChart />
+            </div>
+            <Button type="primary" onClick={()=> handleClick(item) }  >去处理</Button>
+          </List.Item>
+        )}
+      />
+    </div>
   );
 }
 

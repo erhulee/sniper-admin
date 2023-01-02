@@ -1972,7 +1972,7 @@ dagre@^0.8.5:
     graphlib "^2.1.8"
     lodash "^4.17.15"
 
-dayjs@^1.11.1:
+dayjs@^1.11.1, dayjs@^1.11.7:
   version "1.11.7"
   resolved "https://registry.npmmirror.com/dayjs/-/dayjs-1.11.7.tgz#4b296922642f70999544d1144a2c25730fce63e2"
   integrity sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==
