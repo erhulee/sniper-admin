@@ -3037,6 +3037,11 @@ has@^1.0.3, has@~1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
+husky@^8.0.2:
+  version "8.0.2"
+  resolved "http://bnpm.byted.org/husky/-/husky-8.0.2.tgz#5816a60db02650f1f22c8b69b928fd6bcd77a236"
+  integrity sha512-Tkv80jtvbnkK3mYWxPZePGFpQ/tT3HNSs/sasF9P2YfkMezDl3ON37YN6jUUI4eTg5LcyVynlb6r4eyvOmspvg==
+
 hyphenate-style-name@^1.0.3:
   version "1.0.4"
   resolved "https://registry.npmmirror.com/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz#691879af8e220aea5750e8827db4ef62a54e361d"
