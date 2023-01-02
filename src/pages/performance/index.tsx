@@ -110,6 +110,7 @@ export default function Performance() {
         {webvitalList.map((webvital) => {
           return (
             <WebVitalChart
+              key={webvital.title}
               title={webvital.title}
               tooltip={webvital.tooltip}
               proportion={webvital.proportion}

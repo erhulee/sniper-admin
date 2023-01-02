@@ -1,13 +1,10 @@
 import {
-  LaptopOutlined,
-  NotificationOutlined,
   UserOutlined,
-  PlusSquareOutlined,
   RadarChartOutlined,
   ExclamationCircleOutlined,
   PlusOutlined
 } from '@ant-design/icons'
-import { Button, MenuProps } from 'antd'
+import { Button } from 'antd'
 import { Breadcrumb, Layout, Menu, theme, Select } from 'antd'
 import React from 'react'
 import { Outlet } from 'react-router'
@@ -15,11 +12,8 @@ import styles from './index.module.scss'
 import logo from '../../assets/logo.png'
 import ProjectFormModal from './project-form-modal'
 import useModal from './useModal'
-import PerformanceIcon from '../../assets/icons/PerformanceIcon'
-import ErrorIcon from '../../assets/icons/ErrorIcon'
-import UserIcon from '../../assets/icons/UserIcon'
 import { useState } from 'react'
-import { useLocation, useNavigate, useResolvedPath } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import useBreadcrumb from '../../hooks/useBreadcrumb'
 const { Header, Content, Sider } = Layout
 
@@ -114,7 +108,7 @@ const DashBoard: React.FC = () => {
           <Layout style={{ padding: '0 24px 24px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
               {breadcrumb.map((i) => (
-                <Breadcrumb.Item>{i}</Breadcrumb.Item>
+                <Breadcrumb.Item key={i}>{i}</Breadcrumb.Item>
               ))}
             </Breadcrumb>
             <Content
