@@ -5,7 +5,8 @@ const path2breadcrumb: any = {
   error: '错误收集',
   user: '埋点数据',
   js: '运行时错误',
-  http: 'HTTP错误'
+  http: 'HTTP错误',
+  alarm: '告警设置'
 }
 function useBreadcrumb() {
   const location = useLocation()

@@ -24,6 +24,8 @@
         }
 
         .right{
+            display: flex;
+            align-items: center;
             .btn{
                 margin-left: 10px;
             }
@@ -40,10 +42,5 @@
 
 
 .modal{
-    :global{
-            .ant-btn-primary{
-                background-color: var(--primaryColor);
-            }
 
-    }
 }

@@ -10,6 +10,8 @@ import 'tailwindcss/tailwind.css'
 import './index.scss'
 import Errors from './pages/errors'
 import JsErrorPanel from './pages/errors/error-detail-pages/js-error-panel'
+import UserBehavior from './pages/user-behavior'
+import Alarm from './pages/alarm'
 // import "tailwindcss"
 const router = createBrowserRouter([
   {
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
       {
         path: 'error/js/:id',
         element: <JsErrorPanel></JsErrorPanel>
+      },
+      {
+        path: 'behavior',
+        element: <UserBehavior></UserBehavior>
+      },
+      {
+        path: 'alarm',
+        element: <Alarm></Alarm>
       }
     ]
   }

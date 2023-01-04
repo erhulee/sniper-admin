@@ -2,9 +2,10 @@ import {
   UserOutlined,
   RadarChartOutlined,
   ExclamationCircleOutlined,
-  PlusOutlined
+  PlusOutlined,
+  AlertOutlined
 } from '@ant-design/icons'
-import { Button } from 'antd'
+import { Avatar, Button, Popover } from 'antd'
 import { Breadcrumb, Layout, Menu, theme, Select } from 'antd'
 import React from 'react'
 import { Outlet } from 'react-router'
@@ -15,11 +16,16 @@ import useModal from './useModal'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useBreadcrumb from '../../hooks/useBreadcrumb'
+import logOutImg from '../../assets/logout.png'
 const { Header, Content, Sider } = Layout
 
 function PageHeader() {
   const [visible, open, close] = useModal()
-
+  const popContent = (
+    <Menu>
+      <Menu.Item>退出登陆</Menu.Item>
+    </Menu>
+  )
   return (
     <>
       <ProjectFormModal
@@ -44,6 +50,11 @@ function PageHeader() {
             icon={<PlusOutlined />}
             className={styles.btn}
           ></Button>
+
+          <Avatar
+            className="ml-2 bg-red-600 hover:bg-red-500"
+            src={logOutImg}
+          ></Avatar>
         </div>
       </Header>
     </>
@@ -62,9 +73,14 @@ const menuItems = [
     label: '错误收集'
   },
   {
-    key: 'user',
+    key: 'behavior',
     icon: React.createElement(UserOutlined),
     label: '埋点数据'
+  },
+  {
+    key: 'alarm',
+    label: '告警设置',
+    icon: React.createElement(AlertOutlined)
   }
 ]
 
