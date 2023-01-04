@@ -1,24 +1,126 @@
 import { Button, DatePicker, Form, Input } from 'antd'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { login, register } from '../../api/login'
 
 import styles from './index.module.scss'
-
-function LoginForm() {
+function RegisterForm(props: { goLogin: () => void }) {
   const [form] = Form.useForm()
+  const handleSubmit = async () => {
+    try {
+      await form.validateFields()
+      const username = form.getFieldValue('account')
+      const password = form.getFieldValue('password1')
+      const response = await register(username, password)
+      form.resetFields()
+      props.goLogin()
+    } catch (e) {
+      console.log('e', e)
+    }
+  }
   return (
     <div className={styles.form}>
-      <Form>
-        <Form.Item label="账号">
+      <Form labelCol={{ span: 6 }} labelAlign="left" form={form}>
+        <Form.Item
+          label="账号"
+          name="account"
+          required
+          rules={[
+            {
+              required: true,
+              message: '请输入账号'
+            }
+          ]}
+        >
           <Input></Input>
         </Form.Item>
-        <Form.Item label="密码">
+        <Form.Item
+          label="密码"
+          name="password1"
+          required
+          rules={[
+            {
+              required: true,
+              message: '请输入密码'
+            }
+          ]}
+        >
+          <Input></Input>
+        </Form.Item>
+        <Form.Item
+          label="确认密码"
+          name="password2"
+          required
+          dependencies={['password1']}
+          // hasFeedback
+          rules={[
+            {
+              required: true,
+              message: '请输入密码'
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue('password1') === value) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(new Error('两次密码不一致'))
+              }
+            })
+          ]}
+        >
           <Input></Input>
         </Form.Item>
         <Form.Item>
           <div className={styles.btnGroup}>
-            <Button type="primary" className={styles.btn}>
+            <Button
+              type="primary"
+              className={styles.btn}
+              htmlType="submit"
+              onClick={() => handleSubmit()}
+            >
+              注册
+            </Button>
+            <Button onClick={() => props.goLogin()}> 返回</Button>
+          </div>
+        </Form.Item>
+      </Form>
+    </div>
+  )
+}
+function LoginForm(props: { goRegister: () => void }) {
+  const [form] = Form.useForm()
+  const navigate = useNavigate()
+  const handleSubmit = async () => {
+    const username = form.getFieldValue('username')
+    const password = form.getFieldValue('password')
+    try {
+      const result = await login(username, password)
+      navigate('/dashboard')
+    } catch {
+      console.log("error")
+    }
+  }
+  return (
+    <div className={styles.form}>
+      <Form form={form}>
+        <Form.Item label="账号" name="username">
+          <Input></Input>
+        </Form.Item>
+        <Form.Item label="密码" name="password">
+          <Input></Input>
+        </Form.Item>
+        <Form.Item>
+          <div className={styles.btnGroup}>
+            <Button
+              type="primary"
+              className={styles.btn}
+              onClick={() => handleSubmit()}
+            >
               登录
             </Button>
-            <Button className={styles.btn}> 注册</Button>
+            <Button className={styles.btn} onClick={() => props.goRegister()}>
+              注册
+            </Button>
           </div>
         </Form.Item>
         <div className={styles.forget}>忘记密码</div>
@@ -27,9 +129,14 @@ function LoginForm() {
   )
 }
 export default function Login() {
+  const [isLogin, setIsLogin] = useState(true)
   return (
     <div className={styles.page}>
-      <LoginForm></LoginForm>
+      {isLogin ? (
+        <LoginForm goRegister={() => setIsLogin(false)}></LoginForm>
+      ) : (
+        <RegisterForm goLogin={() => setIsLogin(true)}></RegisterForm>
+      )}
     </div>
   )
 }

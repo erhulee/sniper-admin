@@ -8,7 +8,7 @@ import {
 import { Avatar, Button, Popover } from 'antd'
 import { Breadcrumb, Layout, Menu, theme, Select } from 'antd'
 import React from 'react'
-import { Outlet } from 'react-router'
+import { Navigate, Outlet } from 'react-router'
 import styles from './index.module.scss'
 import logo from '../../assets/logo.png'
 import ProjectFormModal from './project-form-modal'
@@ -92,7 +92,11 @@ const DashBoard: React.FC = () => {
   const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false)
   const breadcrumb = useBreadcrumb()
-  const multiCardPage = ['运行时错误']
+  // debugger;
+  if (breadcrumb.length == 1) {
+    // navigate("/dashboard/error")
+    return <Navigate to={'/dashboard/error'}></Navigate>
+  }
   // const computedBgColor = multiCardPage.includes(breadcrumb[breadcrumb.length - 1]) ?  undefined:colorBgContainer;
   return (
     <div className={styles.page}>

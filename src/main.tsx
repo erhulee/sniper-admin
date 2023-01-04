@@ -12,7 +12,9 @@ import Errors from './pages/errors'
 import JsErrorPanel from './pages/errors/error-detail-pages/js-error-panel'
 import UserBehavior from './pages/user-behavior'
 import Alarm from './pages/alarm'
-// import "tailwindcss"
+import initAxios from './api/http'
+initAxios()
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -21,6 +23,7 @@ const router = createBrowserRouter([
   {
     path: '/dashboard',
     element: <DashBoard></DashBoard>,
+
     children: [
       {
         path: 'performance',
