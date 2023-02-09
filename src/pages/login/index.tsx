@@ -2,6 +2,7 @@ import { Button, DatePicker, Form, Input } from 'antd'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { login, register } from '../../api/login'
+import { userStore } from '../../store'
 
 import styles from './index.module.scss'
 function RegisterForm(props: { goLogin: () => void }) {
@@ -90,23 +91,26 @@ function RegisterForm(props: { goLogin: () => void }) {
 function LoginForm(props: { goRegister: () => void }) {
   const [form] = Form.useForm()
   const navigate = useNavigate()
+  const userInfo = userStore
   const handleSubmit = async () => {
     const username = form.getFieldValue('username')
     const password = form.getFieldValue('password')
     try {
       const result = await login(username, password)
+      const userid = result.user._id
+      userInfo.userid = userid
+      userInfo.token = result.access_token
+      // debugger;
       navigate('/dashboard')
-    } catch {
-      console.log("error")
-    }
+    } catch {}
   }
   return (
     <div className={styles.form}>
       <Form form={form}>
-        <Form.Item label="账号" name="username">
+        <Form.Item label="账号" name="username" initialValue={'sider'}>
           <Input></Input>
         </Form.Item>
-        <Form.Item label="密码" name="password">
+        <Form.Item label="密码" name="password" initialValue={'123'}>
           <Input></Input>
         </Form.Item>
         <Form.Item>

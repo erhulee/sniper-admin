@@ -13,6 +13,7 @@ import JsErrorPanel from './pages/errors/error-detail-pages/js-error-panel'
 import UserBehavior from './pages/user-behavior'
 import Alarm from './pages/alarm'
 import initAxios from './api/http'
+import Trace from './pages/trace'
 initAxios()
 
 const router = createBrowserRouter([
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: 'behavior',
         element: <UserBehavior></UserBehavior>
+      },
+      {
+        path: 'trace',
+        element: <Trace></Trace>
       },
       {
         path: 'alarm',

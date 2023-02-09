@@ -1,15 +1,20 @@
 import { Modal, Form, Input, Select } from 'antd'
+import { addProject, ProjectParams, ProjectType } from '../../api/project'
 import styles from './index.module.scss'
 type Props = {
   visible: boolean
   open: () => void
   close: () => void
+  updateProjectList: () => void
 }
 const { TextArea } = Input
 export default function ProjectFormModal(props: Props) {
   const { visible, close } = props
   const [form] = Form.useForm()
-  const handleSave = () => {
+  const handleSave = async () => {
+    const params: ProjectParams = form.getFieldsValue()
+    await addProject(params)
+    props.updateProjectList()
     close()
   }
   const handleCancel = () => {
@@ -29,24 +34,24 @@ export default function ProjectFormModal(props: Props) {
     >
       <div style={{ padding: '5px', marginTop: '10px' }}>
         <Form labelCol={{ span: 4 }} labelAlign="left" form={form}>
-          <Form.Item label="名称">
+          <Form.Item label="名称" name="projectName">
             <Input></Input>
           </Form.Item>
-          <Form.Item label="类型">
+          <Form.Item label="类型" name="projectType">
             <Select
               options={[
                 {
                   label: '网站',
-                  value: 'web-site'
+                  value: ProjectType.web
                 },
                 {
                   label: '微信小程序',
-                  value: 'wx-app'
+                  value: ProjectType.wxApp
                 }
               ]}
             ></Select>
           </Form.Item>
-          <Form.Item label="描述">
+          <Form.Item label="描述" name="projectDes">
             <TextArea rows={2} placeholder="100字内简短描述" maxLength={100} />
           </Form.Item>
         </Form>

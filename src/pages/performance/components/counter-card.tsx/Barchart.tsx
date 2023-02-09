@@ -26,7 +26,7 @@ export default function BarChart() {
       value: 3
     }
   ]
-  const config = {
+  const config:any = {
     data,
     height: 100,
     isStack: true,

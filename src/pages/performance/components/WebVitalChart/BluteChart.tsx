@@ -1,4 +1,3 @@
-import { PropsWithClassName } from '@/utils/type'
 
 type BluteChartProps = {
   data: {
@@ -6,9 +5,10 @@ type BluteChartProps = {
     normal: number
     bad: number
   }
+  className: string
 }
 
-function BluteChart(props: PropsWithClassName<BluteChartProps>) {
+function BluteChart(props: BluteChartProps) {
   const { good, normal, bad } = props.data
   return (
     <div className={`${props.className} flex flex-row  `}>

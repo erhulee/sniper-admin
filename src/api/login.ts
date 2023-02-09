@@ -9,7 +9,7 @@ export function register(username: string, password: string) {
 }
 
 export function login(username: string, password: string) {
-  return axios.post('/login', {
+  return axios.post<any, {access_token:string, user:any, expire:number}>('/login', {
     username,
     password
   })
