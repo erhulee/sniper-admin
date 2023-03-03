@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@ant-design/charts": "^1.4.2",
+    "@loadable/component": "^5.15.3",
+    "@types/loadable__component": "^5.13.4",
     "@types/lodash": "^4.14.191",
     "ahooks": "^3.7.4",
     "antd": "^5.1.0",

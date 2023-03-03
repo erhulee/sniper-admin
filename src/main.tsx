@@ -2,18 +2,32 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import 'antd/dist/reset.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Login from './pages/login'
 import { ConfigProvider, theme } from 'antd'
+
+import loadable from '@loadable/component';
+import Login from './pages/login'
 import DashBoard from './pages/dash-board'
-import Performance from './pages/performance'
+
+// import Performance from './pages/performance'
+// const Performance = React.lazy(() => import('./pages/performance'));
+// import Errors from './pages/errors'
+// import JsErrorPanel from './pages/errors/error-detail-pages/js-error-panel'
+// import UserBehavior from './pages/user-behavior'
+
+// import Alarm from './pages/alarm'
+// import Trace from './pages/trace'
+const Performance = loadable(() => import('./pages/performance'));
+const Errors = loadable(() => import('./pages/errors'));
+const JsErrorPanel = loadable(() => import('./pages/errors/error-detail-pages/js-error-panel'));
+
+const UserBehavior = loadable(() => import('./pages/user-behavior'));
+const Alarm = loadable(() => import('./pages/alarm'));
+const Trace = loadable(() => import('./pages/trace'));
 import 'tailwindcss/tailwind.css'
 import './index.scss'
-import Errors from './pages/errors'
-import JsErrorPanel from './pages/errors/error-detail-pages/js-error-panel'
-import UserBehavior from './pages/user-behavior'
-import Alarm from './pages/alarm'
+
 import initAxios from './api/http'
-import Trace from './pages/trace'
+
 initAxios()
 
 const router = createBrowserRouter([
