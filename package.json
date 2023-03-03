@@ -12,13 +12,13 @@
     "@ant-design/charts": "^1.4.2",
     "@loadable/component": "^5.15.3",
     "@types/loadable__component": "^5.13.4",
-    "@types/lodash": "^4.14.191",
+    "@types/lodash-es": "^4.17.6",
     "ahooks": "^3.7.4",
     "antd": "^5.1.0",
     "autoprefixer": "^10.4.13",
     "axios": "^1.2.2",
     "dayjs": "^1.11.7",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "postcss": "^8.4.20",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -45,8 +45,11 @@
     "eslint-plugin-react": "^7.31.11",
     "husky": "^8.0.2",
     "prettier": "^2.8.1",
+    "rollup-plugin-visualizer": "^5.9.0",
     "typescript": "*",
     "vite": "^4.0.0",
-    "vite-plugin-eslint": "^1.8.1"
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-imp": "^2.3.1"
   }
 }

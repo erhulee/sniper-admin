@@ -3,7 +3,7 @@ import { ModalStatus, TraceInfo, TraceType } from './type'
 // import { useForm } from "antd/es/form/Form";
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { addTrace } from '../../api/trace'
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash-es'
 const TypeEnumMap = {
   [TraceType.Business]: '业务埋点',
   [TraceType.Performance]: '性能埋点'
