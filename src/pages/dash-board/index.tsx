@@ -97,7 +97,15 @@ const menuItems = [
   {
     key: 'error',
     icon: React.createElement(ExclamationCircleOutlined),
-    label: '错误收集'
+    label: '错误收集',
+    children:[{
+      key: 'sourcemap',
+      icon: React.createElement(ExclamationCircleOutlined),
+      label: 'sourcemap管理',
+    }
+  
+    ]
+    
   },
   {
     key: 'behavior',
@@ -145,18 +153,15 @@ const DashBoard: React.FC = () => {
             style={{ background: colorBgContainer }}
           >
             <Menu
-              // mode="inline"
-              onClick={(e) => {
-                const key = e.key
-                //TODO 可能有的需要从 kaypath 得到一个path
-                const path = key
-                navigate(path)
+              onClick={({key, keyPath}) => {
+                navigate(keyPath.reverse().join("/"))
               }}
               mode="inline"
               defaultSelectedKeys={['1']}
               defaultOpenKeys={['sub1']}
               style={{ height: '100%', borderRight: 0 }}
               items={menuItems}
+    
             />
           </Sider>
           <Layout style={{ padding: '0 24px 24px' }}>

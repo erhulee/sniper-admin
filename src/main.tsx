@@ -14,6 +14,7 @@ import UserBehavior from './pages/user-behavior'
 import Alarm from './pages/alarm'
 import initAxios from './api/http'
 import Trace from './pages/trace'
+import SourceMap from './pages/errors/sourcemap'
 initAxios()
 
 const router = createBrowserRouter([
@@ -24,7 +25,6 @@ const router = createBrowserRouter([
   {
     path: '/dashboard',
     element: <DashBoard></DashBoard>,
-
     children: [
       {
         path: 'performance',
@@ -37,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: 'error/js/:id',
         element: <JsErrorPanel></JsErrorPanel>
+      },
+      {
+        path: "error/sourcemap",
+        element: <SourceMap></SourceMap>
       },
       {
         path: 'behavior',
