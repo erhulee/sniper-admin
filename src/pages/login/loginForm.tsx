@@ -1,4 +1,5 @@
 import { Button, Form, Input } from 'antd'
+import { useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { login } from '../../api/login'
@@ -9,15 +10,9 @@ export default function LoginForm(props: { goRegister: () => void }) {
   const [form] = Form.useForm()
   const navigate = useNavigate()
   const userInfo = userStore
-
+  const [formInfo, setFormInfo] = useState({})
   const { refetch, isFetching, data, isSuccess } = useQuery({
-    queryKey: [
-      'login',
-      {
-        username: form.getFieldValue('username'),
-        password: form.getFieldValue('password')
-      }
-    ],
+    queryKey: ['login', formInfo],
     queryFn: (params) => {
       const { queryKey } = params
       const { username, password } = queryKey[1] as any
@@ -50,7 +45,10 @@ export default function LoginForm(props: { goRegister: () => void }) {
               loading={isFetching}
               type="primary"
               className={styles.btn}
-              onClick={() => refetch()}
+              onClick={() => {
+                setFormInfo(form.getFieldsValue())
+                refetch()
+              }}
             >
               登录
             </Button>

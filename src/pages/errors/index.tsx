@@ -5,7 +5,7 @@ import styles from './index.module.scss'
 import ErrorListTable from './error-list-table'
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { getJSErrorInfo } from '../../api/error'
+import { getErrorInfo } from '../../api/error'
 import dayjs from 'dayjs'
 const RangePicker = DatePicker.RangePicker
 const options: DefaultOptionType[] = [
@@ -27,6 +27,20 @@ const options: DefaultOptionType[] = [
   }
 ]
 
+function createLineData(
+  data: Array<{
+    time: number
+    logger: any[]
+  }>
+) {
+  return data.map((item) => {
+    return {
+      date: dayjs(item.time).format('MM月DD日HH时'),
+      count: item.logger.length
+    }
+  })
+}
+
 function Errors() {
   const [timeRange, setTimeRange] = useState<[dayjs.Dayjs, dayjs.Dayjs]>([
     dayjs(Date.now()),
@@ -34,13 +48,15 @@ function Errors() {
   ])
   const queryClient = useQueryClient()
   const query = useQuery({
-    queryKey: ['posts', timeRange],
-    queryFn: () =>
-      getJSErrorInfo(timeRange[0].valueOf(), timeRange[1].valueOf()),
-    select: () => {}
+    queryKey: ['error', timeRange],
+    queryFn: () => getErrorInfo(timeRange[0].valueOf(), timeRange[1].valueOf())
   })
-  const { data, isLoading, isError, refetch } = query
-  console.log('dddd', data, timeRange[0], timeRange[1])
+  const { data, isLoading, isError, refetch, isSuccess } = query
+  let lineChartData: any[] = []
+  if (isSuccess) {
+    lineChartData = createLineData(data?.data)
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.filter}>
@@ -49,13 +65,6 @@ function Errors() {
           value={timeRange}
           onChange={(value) => {
             setTimeRange(value as any)
-            // createTimeLine(value[0]?.valueOf(), value[1]?.valueOf())
-            // console.log(
-            //   "!@#",
-            //
-
-            // )
-            // refetch();
           }}
         />
         {/* <Select
@@ -64,7 +73,7 @@ function Errors() {
           style={{ marginLeft: '10px' }}
         /> */}
       </div>
-      <ErrorChart></ErrorChart>
+      <ErrorChart data={lineChartData}></ErrorChart>
       <ErrorListTable></ErrorListTable>
     </div>
   )

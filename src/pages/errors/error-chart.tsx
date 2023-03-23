@@ -1,12 +1,11 @@
 import { Area } from '@ant-design/charts'
 import { data } from './fakeData'
 
-function ErrorChart() {
+function ErrorChart(props: { data: any[] }) {
   const config = {
-    data: data,
+    data: props.data,
     xField: 'date',
-    yField: 'value',
-    seriesField: 'country',
+    yField: 'count',
     slider: {
       start: 0.1,
       end: 0.9

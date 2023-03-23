@@ -1,6 +1,7 @@
 import { message } from 'antd'
 import axios from 'axios'
 import { userStore } from '../store'
+import { globalFilterStore } from '../store/globalFilter'
 
 export default function initAxios() {
   axios.defaults.baseURL = 'https://bdul0j.laf.dev'
@@ -11,6 +12,10 @@ export default function initAxios() {
         //     token: userStore.token
         // }
         (req.headers as any).token = userStore.token
+        
+        if(globalFilterStore.selectedProject?._id){
+          req.data.appid = globalFilterStore.selectedProject?._id
+        }
         // (req.auth as any ).uid = userStore.userid;
         return req
     }, (req)=>{
@@ -20,10 +25,9 @@ export default function initAxios() {
     (res) => {
       console.log("Res:", res)
       return Promise.resolve(res.data)
-   
     },
     (e) => {
-      message.error('网络异常')
+      // message.error('网络异常')
       return Promise.reject(e)
     }
   )
