@@ -5,7 +5,7 @@ type Props = {
   visible: boolean
   open: () => void
   close: () => void
-  updateProjectList: () => void
+  updateProjectList: (params: any) => void
 }
 const { TextArea } = Input
 export default function ProjectFormModal(props: Props) {
@@ -13,8 +13,7 @@ export default function ProjectFormModal(props: Props) {
   const [form] = Form.useForm()
   const handleSave = async () => {
     const params: ProjectParams = form.getFieldsValue()
-    await addProject(params)
-    props.updateProjectList()
+    props.updateProjectList(params)
     close()
   }
   const handleCancel = () => {

@@ -20,7 +20,7 @@ export type ProjectListResponse = {
 }
 
 export function addProject(params:ProjectParams){
-    return axios.post("/createProject", params)
+    return axios.post("/addProject", params)
 } 
 
 export function queryProject(){

@@ -6,8 +6,7 @@ import {
   AlertOutlined,
   RocketOutlined
 } from '@ant-design/icons'
-import { Avatar, Button, Popover } from 'antd'
-import { Breadcrumb, Layout, Menu, theme, Select } from 'antd'
+import { Breadcrumb, Layout, Menu, theme, Select, Avatar, Button } from 'antd'
 import React from 'react'
 import { Navigate, Outlet } from 'react-router'
 import styles from './index.module.scss'
@@ -19,40 +18,66 @@ import { useNavigate } from 'react-router-dom'
 import useBreadcrumb from '../../hooks/useBreadcrumb'
 import logOutImg from '../../assets/logout.png'
 import { useSnapshot } from 'valtio'
-import { projectStore, userStore } from '../../store'
-import { ProjectListResponse, queryProject } from '../../api/project'
-import { useRequest } from 'ahooks'
+import { userStore } from '../../store'
+import { addProject, queryProject } from '../../api/project'
 import CopyContent from '../../components/copy-content'
+import { useMutation, useQuery } from 'react-query'
+import { globalFilterStore } from '../../store/globalFilter'
+import { Project } from '../types'
 const { Header, Content, Sider } = Layout
 
 function PageHeader() {
+  useSnapshot(globalFilterStore)
   const [visible, open, close] = useModal()
   const navigate = useNavigate()
   const handleLogOut = () => {
     userStore.userid = 'null'
     navigate('/')
   }
-  const handleSelect = (value: string) => {
-    const item = list.find((item) => item._id == value)
-    Object.assign(projectStore, item)
-  }
-  const { loading, run, data } = useRequest<ProjectListResponse, any>(
-    queryProject
-  )
-  const list = data?.data ?? []
-  const options = list.map((item) => ({
-    label: item.projectName,
-    value: item._id
-  }))
 
-  const projectInfo = useSnapshot(projectStore)
+  const { data, isFetching, refetch, isError, isSuccess } = useQuery({
+    queryKey: 'project',
+    queryFn: queryProject
+  })
+
+  const mutation = useMutation((newProject: any) => {
+    return addProject(newProject)
+  })
+
+  const handleSelectChange = (projectId: string) => {
+    const projectList = (data as any)?.r.data as Array<Project>
+    const selectProject = projectList.find(
+      (project) => project._id === projectId
+    )
+    selectProject && (globalFilterStore.selectedProject = selectProject)
+  }
+
+  let options: Array<{
+    label: string
+    value: string | number
+  }> = []
+  if (isSuccess) {
+    const projectList = (data as any)?.r.data as Array<Project>
+    options = projectList.map((project) => ({
+      label: project.projectName,
+      value: project._id
+    }))
+
+    if (globalFilterStore.selectedProject == null) {
+      globalFilterStore.selectedProject = projectList[0]
+    }
+  }
+
   return (
     <>
       <ProjectFormModal
         visible={visible}
         open={open}
         close={close}
-        updateProjectList={() => run()}
+        updateProjectList={(newProject: any) => {
+          mutation.mutate(newProject)
+          refetch()
+        }}
       ></ProjectFormModal>
       <Header className={styles.header}>
         <div className={styles.left}>
@@ -60,15 +85,17 @@ function PageHeader() {
           <span className={styles.name}>哨兵监控看板</span>
         </div>
         <div className={styles.right}>
-          <CopyContent content={projectInfo._id}></CopyContent>
+          <CopyContent
+            content={globalFilterStore.selectedProject?._id}
+          ></CopyContent>
           <Select
             options={options}
             style={{
               width: '100px'
             }}
-            value={projectInfo._id}
-            loading={loading}
-            onChange={(value) => handleSelect(value)}
+            loading={isFetching}
+            value={globalFilterStore.selectedProject?.projectName}
+            onChange={handleSelectChange}
           ></Select>
           <Button
             onClick={() => open()}
@@ -98,14 +125,13 @@ const menuItems = [
     key: 'error',
     icon: React.createElement(ExclamationCircleOutlined),
     label: '错误收集',
-    children:[{
-      key: 'sourcemap',
-      icon: React.createElement(ExclamationCircleOutlined),
-      label: 'sourcemap管理',
-    }
-  
+    children: [
+      {
+        key: 'sourcemap',
+        icon: React.createElement(ExclamationCircleOutlined),
+        label: 'sourcemap管理'
+      }
     ]
-    
   },
   {
     key: 'behavior',
@@ -153,15 +179,14 @@ const DashBoard: React.FC = () => {
             style={{ background: colorBgContainer }}
           >
             <Menu
-              onClick={({key, keyPath}) => {
-                navigate(keyPath.reverse().join("/"))
+              onClick={({ key, keyPath }) => {
+                navigate(keyPath.reverse().join('/'))
               }}
               mode="inline"
               defaultSelectedKeys={['1']}
               defaultOpenKeys={['sub1']}
               style={{ height: '100%', borderRight: 0 }}
               items={menuItems}
-    
             />
           </Sider>
           <Layout style={{ padding: '0 24px 24px' }}>

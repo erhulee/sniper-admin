@@ -20,3 +20,12 @@ export type Buzzer = {
   rule: AlarmRule
   createdTime: DateTime
 }
+
+
+export type Project = {
+  projectDes: string
+  projectName: string
+  projectType: number
+  uid: string
+  _id: string
+}

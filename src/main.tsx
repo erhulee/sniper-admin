@@ -16,7 +16,9 @@ import initAxios from './api/http'
 import Trace from './pages/trace'
 import SourceMap from './pages/errors/sourcemap'
 initAxios()
-
+import { QueryClient, QueryClientProvider } from 'react-query'
+const queryClient = new QueryClient()
+import { ReactQueryDevtools } from 'react-query/devtools'
 const router = createBrowserRouter([
   {
     path: '/',
@@ -39,7 +41,7 @@ const router = createBrowserRouter([
         element: <JsErrorPanel></JsErrorPanel>
       },
       {
-        path: "error/sourcemap",
+        path: 'error/sourcemap',
         element: <SourceMap></SourceMap>
       },
       {
@@ -58,16 +60,25 @@ const router = createBrowserRouter([
   }
 ])
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: '#673281',
-          colorFillContent: '#252226'
-        }
-      }}
-    >
-      <RouterProvider router={router} />
-    </ConfigProvider>
-  </React.StrictMode>
+  // 提供client
+  <QueryClientProvider client={queryClient}>
+    {/* 添加devtools */}
+    {process.env.NODE_ENV === 'development' ? (
+      <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+    ) : (
+      ''
+    )}
+    <React.StrictMode>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: '#673281',
+            colorFillContent: '#252226'
+          }
+        }}
+      >
+        <RouterProvider router={router} />
+      </ConfigProvider>
+    </React.StrictMode>
+  </QueryClientProvider>
 )
