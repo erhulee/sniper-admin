@@ -5,7 +5,7 @@ import styles from './index.module.scss'
 import ErrorListTable from './error-list-table'
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { getErrorInfo } from '../../api/error'
+import { getErrorInfo, getJSErrorInfo } from '../../api/error'
 import dayjs from 'dayjs'
 const RangePicker = DatePicker.RangePicker
 const options: DefaultOptionType[] = [
@@ -36,7 +36,7 @@ function createLineData(
   return data.map((item) => {
     return {
       date: dayjs(item.time).format('MM月DD日HH时'),
-      count: item.logger.length
+      count: item.logger?.length || 0
     }
   })
 }
@@ -51,10 +51,22 @@ function Errors() {
     queryKey: ['error', timeRange],
     queryFn: () => getErrorInfo(timeRange[0].valueOf(), timeRange[1].valueOf())
   })
+
+  const tableQuery = useQuery({
+    queryKey: ['errorTable', timeRange],
+    queryFn: () =>
+      getJSErrorInfo(timeRange[0].valueOf(), timeRange[1].valueOf())
+  })
   const { data, isLoading, isError, refetch, isSuccess } = query
   let lineChartData: any[] = []
+  let tableData: any = []
+
   if (isSuccess) {
     lineChartData = createLineData(data?.data)
+  }
+
+  if (tableQuery.isSuccess) {
+    tableData = tableQuery.data.data
   }
 
   return (
@@ -74,7 +86,7 @@ function Errors() {
         /> */}
       </div>
       <ErrorChart data={lineChartData}></ErrorChart>
-      <ErrorListTable></ErrorListTable>
+      <ErrorListTable data={tableData}></ErrorListTable>
     </div>
   )
 }

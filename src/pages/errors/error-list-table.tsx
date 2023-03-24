@@ -3,6 +3,9 @@ import { type2tagColor } from './contant'
 import { bar } from './fakeData'
 import { Column } from '@ant-design/charts'
 import { useNavigate } from 'react-router-dom'
+import { Logger } from 'sass'
+import _ from 'lodash'
+import dayjs from 'dayjs'
 interface DataType {
   id: string
   type: 'JS Error'
@@ -15,22 +18,24 @@ interface DataType {
   }
 
   // 按照全局粒度降级的数据
-  countList: Array<{
-    datetime: {
-      format: string
-      raw: Date
-    }
+  countChartData: Array<{
+    date: string
     count: number
   }>
 
   countAll: number
 }
-function BarChart() {
+function BarChart(props: {
+  data: Array<{
+    count: number
+    date: string
+  }>
+}) {
   return (
     <Column
-      data={bar}
-      xField="城市"
-      yField="销售额"
+      data={props.data || []}
+      xField="date"
+      yField="count"
       xAxis={{
         tickLine: null
       }}
@@ -43,47 +48,32 @@ function BarChart() {
     />
   )
 }
-function ErrorListTable() {
-  const errorList: DataType[] = [
-    {
-      id: '1',
+function ErrorListTable(props: {
+  data: Array<{
+    name: string
+    loggers: any[]
+  }>
+}) {
+  const errorList: DataType[] = props.data.map((item) => {
+    const mostLastTime = (item.loggers.find((log) => log.count !== 0) || {})
+      .date
+
+    return {
+      id: item.name,
       type: 'JS Error',
-      name: 'CustomizeError',
+      name: item.name,
       datetime: {
-        format: '2023/01/02',
-        raw: new Date()
+        format: dayjs(mostLastTime).format('YYYY/MM/DD HH时'),
+        raw: mostLastTime
       },
-      countList: [
-        {
-          datetime: {
-            format: '2023/01/02',
-            raw: new Date()
-          },
-          count: 1
-        }
-      ],
-      countAll: 1
-    },
-    {
-      id: '1',
-      type: 'JS Error',
-      name: 'CustomizeError',
-      datetime: {
-        format: '2023/01/02',
-        raw: new Date()
-      },
-      countList: [
-        {
-          datetime: {
-            format: '2023/01/02',
-            raw: new Date()
-          },
-          count: 1
-        }
-      ],
-      countAll: 1
+      countChartData: item.loggers.map((log) => ({
+        count: log.count,
+        date: dayjs(log.date).format('YYYY/MM/DD HH时')
+      })),
+      countAll: item.loggers.reduce((pre, cur) => pre.count + cur.count)
     }
-  ]
+  })
+
   const navigate = useNavigate()
 
   const handleClick = (item: DataType) => {
@@ -113,7 +103,7 @@ function ErrorListTable() {
               description={item.detail}
             />
             <div style={{ flex: '3', marginRight: '50px', marginLeft: '50px' }}>
-              <BarChart />
+              <BarChart data={item.countChartData} />
             </div>
             <Button type="primary" onClick={() => handleClick(item)}>
               去处理
