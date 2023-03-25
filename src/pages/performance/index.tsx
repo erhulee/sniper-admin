@@ -74,7 +74,7 @@ export default function Performance() {
       {isFetching && <Loading></Loading>}
       {!isFetching && isSuccess && (
         <div className=" grid grid-cols-3 mt-10 gap-10">
-          {cardsData.map((cardData) => {
+          {cardsData.map((cardData: any) => {
             return (
               <WebVitalChart
                 key={cardData.title}
