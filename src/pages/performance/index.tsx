@@ -1,124 +1,93 @@
-import CounterCard from './components/counter-card.tsx'
-import WebVitalChart from './components/WebVitalChart'
+import { useQuery } from "react-query";
+import { useSnapshot } from "valtio";
+import { globalFilterStore } from "../../store";
+import WebVitalChart from "./components/WebVitalChart";
+import { getWebVitals } from "@/api/performance";
+import dayjs from "dayjs";
+import Loading from "@/components/loading";
+const tooltipsMap: Record<string, string> = {
+  TTFB: "浏览器开始收到服务器响应数据的时间(后台处理时间+重定向时间)",
+  LCP: "最大内容绘制，测量加载性能。为了提供良好的用户体验，LCP 应在页面首次开始加载后的2.5 秒内发生。",
+  FID: "首次输入延迟，测量交互性。为了提供良好的用户体验，页面的 FID 应为100 毫秒或更短。",
+  CLS: "累积布局偏移，测量视觉稳定性。为了提供良好的用户体验，页面的 CLS 应保持在 0.1. 或更少。",
+};
+
+function computeProportion(trendData: any[]) {
+  const resultCount: any = {
+    good: 0,
+    ["needs-improvement"]: 0,
+    bad: 0,
+  };
+
+  let countAll = 0;
+  trendData.forEach((data) => {
+    const { dgree, count } = data;
+    resultCount[dgree] += count;
+    countAll += count;
+  });
+
+  return {
+    good: (resultCount.good / countAll).toFixed(2),
+    ["needs-improvement"]: (
+      resultCount["needs-improvement"] / countAll
+    ).toFixed(2),
+    bad: (resultCount.bad / countAll).toFixed(2),
+  };
+}
 export default function Performance() {
-  const webvitalList = [
-    {
-      title: 'Worst FID Web Vitals',
-      tooltip:
-        'First Input Delay: 衡量可交互性。为了提供一个好的用户体验，FID应该在100毫秒内。',
-      proportion: {
-        good: 1,
-        general: 0,
-        bad: 0
-      },
-      data: [
-        {
-          category: 'good',
-          dateTime: 0,
-          value: 0
-        },
-        {
-          category: 'general',
-          dateTime: 0,
-          value: 0
-        },
-        {
-          category: 'bad',
-          dateTime: 0,
-          value: 0
-        }
-      ]
+  const globalFilterSnap = useSnapshot(globalFilterStore);
+  let cardsData: any = [];
+
+  const query = useQuery({
+    queryKey: ["webvital", globalFilterSnap],
+    queryFn: ({ queryKey }) => {
+      const snap = queryKey[1];
+      if (typeof snap == "string") return;
+      const startDate = snap.startDate.valueOf();
+      const endDate = snap.endDate.valueOf();
+      return getWebVitals(startDate, endDate);
     },
-    {
-      title: 'Worst LCP Web Vitals',
-      tooltip:
-        'Largest Contentful Paint: 衡量加载性能。为了提供一个好的用户体验，LCP应该在2.5秒内。',
-      proportion: {
-        good: 1,
-        general: 0,
-        bad: 0
-      },
-      data: [
-        {
-          category: 'good',
-          dateTime: 0,
-          value: 0
-        },
-        {
-          category: 'general',
-          dateTime: 0,
-          value: 0
-        },
-        {
-          category: 'bad',
-          dateTime: 0,
-          value: 0
-        }
-      ]
-    },
-    {
-      title: 'Worst FCP Web Vitals',
-      tooltip:
-        'Cumulative Layout Shift: 衡量视觉稳定性。为了提供一个好的用户体验，CLS应该小于0.1。',
-      proportion: {
-        good: 1,
-        general: 0,
-        bad: 0
-      },
-      data: [
-        {
-          category: 'good',
-          dateTime: 0,
-          value: 0
-        },
-        {
-          category: 'general',
-          dateTime: 0,
-          value: 0
-        },
-        {
-          category: 'bad',
-          dateTime: 0,
-          value: 0
-        }
-      ]
-    }
-  ]
+  });
+
+  const { isSuccess, data, isFetching } = query;
+  if (isSuccess) {
+    const webVitals: any[] = data?.data;
+    cardsData = webVitals.map((webvital) => {
+      const { category, trendData, path_performance } = webvital;
+      return {
+        title: category,
+        tooltip: tooltipsMap[category],
+        trendData: trendData.map((data: any) => ({
+          ...data,
+          date: dayjs(data.date).format("YYYY-MM-DD HH时"),
+        })),
+        proportion: computeProportion(trendData),
+        path_performance: path_performance,
+      };
+    });
+  }
+
   return (
-    <div>
-      <div className=" grid grid-cols-3 gap-10 mt-8">
-        <CounterCard
-          title={'LCP 统计'}
-          description={'近一周期'}
-          tooltip="SAdasd"
-          barData={[]}
-        ></CounterCard>
-        <CounterCard
-          title={'LCP 统计'}
-          description={'近一周期'}
-          tooltip="SAdasd"
-          barData={[]}
-        ></CounterCard>
-        <CounterCard
-          title={'LCP 统计'}
-          description={'近一周期'}
-          tooltip="SAdasd"
-          barData={[]}
-        ></CounterCard>
-      </div>
-      <div className=" grid grid-cols-2 mt-10 gap-10">
-        {webvitalList.map((webvital) => {
-          return (
-            <WebVitalChart
-              key={webvital.title}
-              title={webvital.title}
-              tooltip={webvital.tooltip}
-              proportion={webvital.proportion}
-              trendData={webvital.data}
-            ></WebVitalChart>
-          )
-        })}
-      </div>
+    <div className="flex flex-col h-full">
+      <div className=" text-xl font-semibold">Web Vital 概览</div>
+
+      {isFetching && <Loading></Loading>}
+      {!isFetching && isSuccess && (
+        <div className=" grid grid-cols-3 mt-10 gap-10">
+          {cardsData.map((cardData) => {
+            return (
+              <WebVitalChart
+                key={cardData.title}
+                title={cardData.title}
+                tooltip={cardData.tooltip}
+                proportion={cardData.proportion}
+                trendData={cardData.trendData}
+                path_performance={cardData.path_performance}
+              ></WebVitalChart>
+            );
+          })}
+        </div>
+      )}
     </div>
-  )
+  );
 }

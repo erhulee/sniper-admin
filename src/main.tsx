@@ -1,64 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import 'antd/dist/reset.css'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Login from './pages/login'
-import { ConfigProvider, theme } from 'antd'
-import DashBoard from './pages/dash-board'
-import Performance from './pages/performance'
+import { ConfigProvider } from 'antd'
 import 'tailwindcss/tailwind.css'
 import './index.scss'
-import Errors from './pages/errors'
-import JsErrorPanel from './pages/errors/error-detail-pages/js-error-panel'
-import UserBehavior from './pages/user-behavior'
-import Alarm from './pages/alarm'
+
 import initAxios from './api/http'
-import Trace from './pages/trace'
-import SourceMap from './pages/errors/sourcemap'
+
 initAxios()
 import { QueryClient, QueryClientProvider } from 'react-query'
 const queryClient = new QueryClient()
 import { ReactQueryDevtools } from 'react-query/devtools'
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Login></Login>
-  },
-  {
-    path: '/dashboard',
-    element: <DashBoard></DashBoard>,
-    children: [
-      {
-        path: 'performance',
-        element: <Performance></Performance>
-      },
-      {
-        path: 'error',
-        element: <Errors></Errors>
-      },
-      {
-        path: 'error/js/:id',
-        element: <JsErrorPanel></JsErrorPanel>
-      },
-      {
-        path: 'error/sourcemap',
-        element: <SourceMap></SourceMap>
-      },
-      {
-        path: 'behavior',
-        element: <UserBehavior></UserBehavior>
-      },
-      {
-        path: 'trace',
-        element: <Trace></Trace>
-      },
-      {
-        path: 'alarm',
-        element: <Alarm></Alarm>
-      }
-    ]
-  }
-])
+import App from './app'
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   // 提供client
   <QueryClientProvider client={queryClient}>
@@ -77,7 +31,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           }
         }}
       >
-        <RouterProvider router={router} />
+        <App></App>
       </ConfigProvider>
     </React.StrictMode>
   </QueryClientProvider>

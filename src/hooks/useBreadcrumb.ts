@@ -2,7 +2,9 @@ import { useLocation } from 'react-router-dom'
 const path2breadcrumb: any = {
   dashboard: '控制台',
   performance: '性能分析',
-  error: '错误收集',
+  error: '错误分析',
+  collection: "错误收集",
+  sourcemap:"sourcemap",
   user: '埋点数据',
   js: '运行时错误',
   http: 'HTTP错误',

@@ -13,7 +13,7 @@ export default function initAxios() {
         // }
         (req.headers as any).token = userStore.token
         
-        if(globalFilterStore.selectedProject?._id){
+        if(globalFilterStore.selectedProject?._id && req.data){
           req.data.appid = globalFilterStore.selectedProject?._id
         }
         // (req.auth as any ).uid = userStore.userid;

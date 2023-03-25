@@ -1,57 +1,70 @@
-import { QuestionCircleOutlined } from '@ant-design/icons'
-import { Checkbox, Radio, Tooltip } from 'antd'
-import BluteChart from './BluteChart'
-import IconBad from './icons/IconBad'
-import IconNormal from './icons/IconNormal'
-import IconSmile from './icons/IconSmile'
-import TrendChart from './TrendChart'
+import { QuestionCircleOutlined } from "@ant-design/icons";
+import { Checkbox, Radio, Tooltip } from "antd";
+import BluteChart from "./BluteChart";
+import IconBad from "./icons/IconBad";
+import IconNormal from "./icons/IconNormal";
+import IconSmile from "./icons/IconSmile";
+import TrendChart from "./TrendChart";
 
 type WebVitalChartProps = {
-  title: string
-  tooltip: string
+  title: string;
+  tooltip: string;
   proportion: {
-    good: number
-    general: number
-    bad: number
-  }
-  trendData?: any
-  routeList?: any
-  className?: string
-}
+    good: number;
+    ["needs-improvement"]: number;
+    bad: number;
+  };
+  trendData?: any;
+  routeList?: any;
+  className?: string;
+  path_performance: Array<{
+    path: string;
+    partition: {
+      bad: number;
+      good: number;
+      ["needs-improvement"]: number;
+    };
+  }>;
+};
 
-function SelectItem() {
+function SelectItem(props: {
+  path: string;
+  partition: {
+    bad: number;
+    good: number;
+    ["needs-improvement"]: number;
+  };
+}) {
+  const { path, partition } = props;
   return (
     <div className="flex border-t border-t-gray-light py-4">
-      <Radio className="mr-4" />
+      <Radio className="mr-4" value={true} />
       <div className="flex-row flex justify-between w-full  ">
         <span className=" hover:text-primary cursor-pointer font-semibold">
-          /prodecution/sda
+          {path}
         </span>
-        <BluteChart
-          data={{
-            good: 12,
-            normal: 23,
-            bad: 9
-          }}
-          className=" w-60"
-        ></BluteChart>
+        <BluteChart data={partition} className=" w-60"></BluteChart>
       </div>
     </div>
-  )
+  );
 }
 
 function WebVitalChart(props: WebVitalChartProps) {
-  const { title, tooltip, className, proportion } = props
-  const good = (proportion.good * 100).toFixed(0)
-  const general = (proportion.general * 100).toFixed(0)
-  const bad = (proportion.bad * 100).toFixed(0)
+  const { title, tooltip, className, proportion, trendData, path_performance } =
+    props;
+  const good = (proportion.good * 100).toFixed(0);
+  const general = (proportion["needs-improvement"] * 100).toFixed(0);
+  const bad = (proportion.bad * 100).toFixed(0);
+
   return (
     <div
-      className={`${className} border  border-gray-light rounded-lg px-8 py-4`}
+      className={`${className} border  border-gray-light rounded-lg px-6 py-4 bg-stone-50 border-stone-300 border-solid `}
     >
       <div className="">
-        <div className="text-gray-default flex flex-row items-center">
-          <span className="font-semibold text-gray-dark mr-4">{title}</span>
+        <div className="text-gray-default flex flex-row items-center mb-4">
+          <span className="font-semibold text-gray-dark mr-4 text-xl ">
+            {title}
+          </span>
           <Tooltip title={tooltip}>
             <QuestionCircleOutlined></QuestionCircleOutlined>
           </Tooltip>
@@ -71,12 +84,14 @@ function WebVitalChart(props: WebVitalChartProps) {
           </span>
         </div>
         <div className="my-4">
-          <TrendChart></TrendChart>
+          <TrendChart data={trendData}></TrendChart>
         </div>
 
-        <SelectItem></SelectItem>
+        {path_performance.map((pathItem) => (
+          <SelectItem {...pathItem}></SelectItem>
+        ))}
       </div>
     </div>
-  )
+  );
 }
-export default WebVitalChart
+export default WebVitalChart;

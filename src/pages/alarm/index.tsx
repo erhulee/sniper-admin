@@ -1,20 +1,22 @@
-import { Button, Checkbox, List, Table } from 'antd'
-import useModal from '../../hooks/useModal'
-import BarChart from './bar-chart'
-import { AlarmOprator, AlarmRule, Buzzer } from '../types'
-import AlarmDrager from './alarm-drawer'
+import { Button, List, Table } from "antd";
+import useModal from "../../hooks/useModal";
+import BarChart from "./bar-chart";
+import { AlarmOprator, AlarmRule, Buzzer } from "../types";
+import { SettingOutlined } from "@ant-design/icons";
+import AlarmDrawer from "./alarm-drawer";
+import ButtonGroup from "antd/es/button/button-group";
 type AlarmData = {
-  name: string
-  rule: AlarmRule
-}
+  name: string;
+  rule: AlarmRule;
+};
 
 function formatRule(rule: AlarmRule) {
   const map = {
-    [AlarmOprator.bg]: '>',
-    [AlarmOprator.eq]: '=',
-    [AlarmOprator.ls]: '<'
-  }
-  return `${rule.name}${map[rule.oprator]}${rule.value}`
+    [AlarmOprator.bg]: ">",
+    [AlarmOprator.eq]: "=",
+    [AlarmOprator.ls]: "<",
+  };
+  return `${rule.name}${map[rule.oprator]}${rule.value}`;
 }
 function AlarmItem(props: AlarmData) {
   return (
@@ -25,34 +27,41 @@ function AlarmItem(props: AlarmData) {
       </div>
       <div className=" text-gray-500 text-sm">{formatRule(props.rule)}</div>
     </div>
-  )
+  );
 }
 function AlarmList() {
+  const [visible, open, close] = useModal();
   const data: AlarmData[] = [
     {
-      name: '重要的JS错误',
+      name: "重要的JS错误",
       rule: {
-        name: 'CC',
+        name: "CC",
         oprator: AlarmOprator.eq,
-        value: 200
-      }
+        value: 200,
+      },
     },
     {
-      name: '重要的JS错误',
+      name: "重要的JS错误",
       rule: {
-        name: 'CC',
+        name: "CC",
         oprator: AlarmOprator.eq,
-        value: 200
-      }
-    }
-  ]
+        value: 200,
+      },
+    },
+  ];
   return (
     <div className="">
+      <AlarmDrawer visible={visible} close={close}></AlarmDrawer>
       <div className=" flex items-center justify-between mb-4 ">
+        <Button icon={<SettingOutlined />}></Button>
         <div className=" text-primary-900 font-semibold text-base">
           今日告警
         </div>
-        <Button type="primary">添加</Button>
+        <ButtonGroup>
+          <Button type="primary" onClick={open}>
+            添加
+          </Button>
+        </ButtonGroup>
       </div>
 
       <List
@@ -60,7 +69,7 @@ function AlarmList() {
         renderItem={(item) => <AlarmItem {...item}></AlarmItem>}
       ></List>
     </div>
-  )
+  );
 }
 
 function AlarmChart() {
@@ -69,38 +78,38 @@ function AlarmChart() {
       <div className=" mb-4 text-xl  font-semibold ">告警个数总览(天)</div>
       <BarChart></BarChart>
     </div>
-  )
+  );
 }
 
 function BuzzerList() {
   const data: Buzzer[] = [
     {
-      bid: '1',
-      title: '新上页面',
+      bid: "1",
+      title: "新上页面",
       rule: {
-        name: 'JS ERROR',
+        name: "JS ERROR",
         oprator: AlarmOprator.bg,
-        value: 20
+        value: 20,
       },
       createdTime: {
         raw_date: new Date(),
-        formate: '2020-03-01'
-      }
+        formate: "2020-03-01",
+      },
     },
     {
-      bid: '2',
-      title: '新上页面',
+      bid: "2",
+      title: "新上页面",
       rule: {
-        name: 'JS ERROR',
+        name: "JS ERROR",
         oprator: AlarmOprator.bg,
-        value: 20
+        value: 20,
       },
       createdTime: {
         raw_date: new Date(),
-        formate: '2020-03-01'
-      }
-    }
-  ]
+        formate: "2020-03-01",
+      },
+    },
+  ];
 
   return (
     <div className=" mt-4 bg-primary-20 ">
@@ -120,28 +129,28 @@ function BuzzerList() {
       <Table
         dataSource={data}
         rowSelection={{
-          type: 'checkbox'
+          type: "checkbox",
         }}
         columns={[
           {
-            dataIndex: 'title',
-            title: '名称',
-            key: 'title'
+            dataIndex: "title",
+            title: "名称",
+            key: "title",
           },
           {
-            dataIndex: 'rule',
-            key: 'rule',
-            title: '规则',
-            render: (item) => <span>{formatRule(item)}</span>
+            dataIndex: "rule",
+            key: "rule",
+            title: "规则",
+            render: (item) => <span>{formatRule(item)}</span>,
           },
           {
-            key: 'createdTime',
-            dataIndex: 'createdTime',
-            title: '创建时间',
-            render: (item) => <span>{item.formate}</span>
+            key: "createdTime",
+            dataIndex: "createdTime",
+            title: "创建时间",
+            render: (item) => <span>{item.formate}</span>,
           },
           {
-            dataIndex: '',
+            dataIndex: "",
             // align:"right",
             width: 2,
             render: () => (
@@ -156,18 +165,16 @@ function BuzzerList() {
                   删除
                 </Button>
               </div>
-            )
-          }
+            ),
+          },
         ]}
       ></Table>
     </div>
-  )
+  );
 }
 function Alarm() {
-  const [visible, open, close] = useModal()
   return (
     <div>
-      <AlarmDrager visible={visible} close={close}></AlarmDrager>
       <div className=" flex justify-between  ">
         <div className=" mr-8 flex-auto ">
           <AlarmChart></AlarmChart>
@@ -175,13 +182,13 @@ function Alarm() {
         </div>
         <div
           className="p-5 border border-solid border-primary-100 bg-slate-50 flex-1 "
-          style={{ minWidth: '300px' }}
+          style={{ minWidth: "300px" }}
         >
           <AlarmList></AlarmList>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Alarm
+export default Alarm;
