@@ -52,7 +52,6 @@ function UserBehavior() {
   });
 
   if (isFetching) return <Loading></Loading>;
-
   return (
     <div>
       <div className=" flex justify-around">
@@ -63,7 +62,7 @@ function UserBehavior() {
 
       <div className="my-8">
         <div className="font-semibold text-lg mb-4">页面浏览量(PV)分布图</div>
-        <StackBar data={data?.data.barData}></StackBar>
+        <StackBar data={data?.data.barData || []}></StackBar>
       </div>
 
       <div className="my-8">

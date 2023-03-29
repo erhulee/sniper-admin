@@ -5,7 +5,7 @@ export type CoreData = {
     tooltip?: string,
     value: number | string,
     des: string
-    ratio: number
+    ratio: number | string
     trend: Trend
     impact: Impact
     dataSource?: any[]

@@ -1,7 +1,7 @@
 import { BehaviorData } from "@/api/behavior";
 import { Column } from "@ant-design/plots";
 
-const StackBar = (props: { data: BehaviorData["trendData"] }) => {
+const StackBar = (props: { data: BehaviorData["barData"] }) => {
   const { data } = props;
 
   const config: any = {
