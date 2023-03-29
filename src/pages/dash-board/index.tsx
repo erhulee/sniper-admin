@@ -106,7 +106,8 @@ function PageHeader() {
 
           <Avatar
             onClick={() => handleLogOut()}
-            className="ml-2 bg-red-600 hover:bg-red-500 cursor-pointer "
+            className="ml-2 bg-red-600 hover:bg-red-500 cursor-pointer"
+            style={{ padding: "5px" }}
             src={logOutImg}
           ></Avatar>
         </div>
@@ -167,7 +168,6 @@ const DashBoard: React.FC = () => {
     return <Navigate to="/"></Navigate>;
   }
 
-  // const computedBgColor = multiCardPage.includes(breadcrumb[breadcrumb.length - 1]) ?  undefined:colorBgContainer;
   return (
     <div className={styles.page}>
       <Layout style={{ height: "100vh" }}>

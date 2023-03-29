@@ -1,51 +1,36 @@
-import { Column } from '@ant-design/plots'
-import { useEffect, useState } from 'react'
+import { BehaviorData } from "@/api/behavior";
+import { Column } from "@ant-design/plots";
 
-const StackBar = () => {
-  const [data, setData] = useState([])
-
-  useEffect(() => {
-    asyncFetch()
-  }, [])
-
-  const asyncFetch = () => {
-    fetch(
-      'https://gw.alipayobjects.com/os/antfincdn/8elHX%26irfq/stack-column-data.json'
-    )
-      .then((response) => response.json())
-      .then((json) => setData(json))
-      .catch((error) => {
-        console.log('fetch data failed', error)
-      })
-  }
+const StackBar = (props: { data: BehaviorData["trendData"] }) => {
+  const { data } = props;
 
   const config: any = {
-    data,
+    data: data,
     isStack: true,
-    xField: 'year',
-    yField: 'value',
-    seriesField: 'type',
+    xField: "datetime",
+    yField: "count",
+    seriesField: "pathname",
     label: {
       // 可手动配置 label 数据标签位置
-      position: 'middle',
+      position: "middle",
       // 'top', 'bottom', 'middle'
       // 可配置附加的布局方法
       layout: [
         // 柱形图数据标签位置自动调整
         {
-          type: 'interval-adjust-position'
+          type: "interval-adjust-position",
         }, // 数据标签防遮挡
         {
-          type: 'interval-hide-overlap'
+          type: "interval-hide-overlap",
         }, // 数据标签文颜色自动调整
         {
-          type: 'adjust-color'
-        }
-      ]
-    }
-  }
+          type: "adjust-color",
+        },
+      ],
+    },
+  };
 
-  return <Column {...config} />
-}
+  return <Column {...config} />;
+};
 
-export default StackBar
+export default StackBar;

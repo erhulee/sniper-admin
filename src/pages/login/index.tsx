@@ -1,17 +1,28 @@
-import { useState } from 'react'
-import styles from './index.module.scss'
-import LoginForm from './loginForm'
-import RegisterForm from './registerForm'
+import { userStore } from "@/store";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "./index.module.scss";
+import LoginForm from "./loginForm";
+import RegisterForm from "./registerForm";
 
 export default function Login() {
-  const [isLogin, setIsLogin] = useState(true)
+  const [isLoginStage, setIsLoginStage] = useState(true);
+  const isInline = userStore.userid;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isInline) {
+      navigate("/dashboard/performance");
+    }
+  }, []);
+
   return (
     <div className={styles.page}>
-      {isLogin ? (
-        <LoginForm goRegister={() => setIsLogin(false)}></LoginForm>
+      {isLoginStage ? (
+        <LoginForm goRegister={() => setIsLoginStage(false)}></LoginForm>
       ) : (
-        <RegisterForm goLogin={() => setIsLogin(true)}></RegisterForm>
+        <RegisterForm goLogin={() => setIsLoginStage(true)}></RegisterForm>
       )}
     </div>
-  )
+  );
 }

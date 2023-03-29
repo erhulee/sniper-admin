@@ -1,5 +1,9 @@
 import { proxy, subscribe } from "valtio";
-const _state =  JSON.parse(localStorage.getItem('__SNIPER__USER') as any) || {
+type UserStore = {
+    userid?: string,
+    token?: string
+}
+const _state =  JSON.parse(localStorage.getItem('__SNIPER__USER') || "{}")  as unknown as UserStore|| {
     userid: undefined,
     token: undefined
 }

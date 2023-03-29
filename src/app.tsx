@@ -10,7 +10,6 @@ import SourceMap from "./pages/errors/sourcemap";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 function App() {
-  // usePersistent(userStore, 'user')
   const router = createBrowserRouter([
     {
       path: "/",
