@@ -1,29 +1,25 @@
-import { Button, List, Table } from "antd";
+import { Button, List, Table, Tag } from "antd";
 import useModal from "../../hooks/useModal";
 import BarChart from "./bar-chart";
-import { AlarmOprator, AlarmRule, Buzzer } from "../types";
+import { AlarmRule, ReturnAPIResultType } from "../types";
 import { SettingOutlined } from "@ant-design/icons";
 import AlarmDrawer from "./alarm-drawer";
 import ButtonGroup from "antd/es/button/button-group";
+import { useQuery } from "react-query";
+import { AlarmOperator, queryBuzzer, SupportRuleName } from "@/api/alaram";
+import { subscribeKey } from "valtio/utils";
+import { globalFilterStore } from "@/store";
+import dayjs from "dayjs";
 type AlarmData = {
   name: string;
   rule: AlarmRule;
 };
 
-function formatRule(rule: AlarmRule) {
-  const map = {
-    [AlarmOprator.bg]: ">",
-    [AlarmOprator.eq]: "=",
-    [AlarmOprator.ls]: "<",
-  };
-  return `${rule.name}${map[rule.oprator]}${rule.value}`;
-}
 function AlarmItem(props: AlarmData) {
   return (
     <div className=" p-2">
       <div className=" flex justify-between items-center">
         <span className=" text-primary-900"> {props.name}</span>
-        {/* <Checkbox></Checkbox> */}
       </div>
       <div className=" text-gray-500 text-sm">{formatRule(props.rule)}</div>
     </div>
@@ -32,22 +28,22 @@ function AlarmItem(props: AlarmData) {
 function AlarmList() {
   const [visible, open, close] = useModal();
   const data: AlarmData[] = [
-    {
-      name: "重要的JS错误",
-      rule: {
-        name: "CC",
-        oprator: AlarmOprator.eq,
-        value: 200,
-      },
-    },
-    {
-      name: "重要的JS错误",
-      rule: {
-        name: "CC",
-        oprator: AlarmOprator.eq,
-        value: 200,
-      },
-    },
+    // {
+    //   name: "重要的JS错误",
+    //   rule: {
+    //     name: "CC",
+    //     oprator: AlarmOprator.eq,
+    //     value: 200,
+    //   },
+    // },
+    // {
+    //   name: "重要的JS错误",
+    //   rule: {
+    //     name: "CC",
+    //     oprator: AlarmOprator.eq,
+    //     value: 200,
+    //   },
+    // },
   ];
   return (
     <div className="">
@@ -82,34 +78,39 @@ function AlarmChart() {
 }
 
 function BuzzerList() {
-  const data: Buzzer[] = [
-    {
-      bid: "1",
-      title: "新上页面",
-      rule: {
-        name: "JS ERROR",
-        oprator: AlarmOprator.bg,
-        value: 20,
-      },
-      createdTime: {
-        raw_date: new Date(),
-        formate: "2020-03-01",
-      },
-    },
-    {
-      bid: "2",
-      title: "新上页面",
-      rule: {
-        name: "JS ERROR",
-        oprator: AlarmOprator.bg,
-        value: 20,
-      },
-      createdTime: {
-        raw_date: new Date(),
-        formate: "2020-03-01",
-      },
-    },
-  ];
+  const { data, refetch } = useQuery({
+    queryKey: ["buzzer_list"],
+    queryFn: queryBuzzer,
+    enabled: false,
+    initialData: { success: true, data: [] },
+  });
+
+  function generateTableData(data?: ReturnAPIResultType<typeof queryBuzzer>) {
+    function formateRule(rule: {
+      name: SupportRuleName;
+      operator: AlarmOperator;
+      value: number;
+    }) {
+      const { name, operator, value } = rule;
+      return `${name} ${operator} ${value}`;
+    }
+    if (data == null) return;
+    const tableData = data.data.map((item) => {
+      return {
+        bid: item._id,
+        title: item.name,
+        notify: item.notifyType,
+        rule: formateRule(item.rule),
+        createTime: dayjs(item.createTime).format("YYYY-MM-DD HH时"),
+      };
+    });
+
+    return tableData;
+  }
+
+  subscribeKey(globalFilterStore, "selectedProject", (v) => {
+    refetch();
+  });
 
   return (
     <div className=" mt-4 bg-primary-20 ">
@@ -125,9 +126,8 @@ function BuzzerList() {
         </Button>
       </div>
 
-      {/* <List dataSource={data} renderItem={renderItem} className=" p-2"  /> */}
       <Table
-        dataSource={data}
+        dataSource={generateTableData(data)}
         rowSelection={{
           type: "checkbox",
         }}
@@ -141,17 +141,22 @@ function BuzzerList() {
             dataIndex: "rule",
             key: "rule",
             title: "规则",
-            render: (item) => <span>{formatRule(item)}</span>,
           },
           {
-            key: "createdTime",
-            dataIndex: "createdTime",
+            key: "createTime",
+            dataIndex: "createTime",
             title: "创建时间",
-            render: (item) => <span>{item.formate}</span>,
+          },
+          {
+            key: "notify",
+            dataIndex: "notify",
+            title: "通知方式",
+            render: () => {
+              return <Tag color="blue">飞书</Tag>;
+            },
           },
           {
             dataIndex: "",
-            // align:"right",
             width: 2,
             render: () => (
               <div className=" flex">

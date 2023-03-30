@@ -1,12 +1,22 @@
 import useBreadcrumb from "@/hooks/useBreadcrumb";
 import { globalFilterStore } from "@/store";
 import { DatePicker, Breadcrumb } from "antd";
+import { useMemo } from "react";
 import { useSnapshot } from "valtio";
 const RangePicker = DatePicker.RangePicker;
+export function GlobalMemoWrap(
+  props: React.PropsWithChildren<{
+    keys: Array<keyof typeof globalFilterStore>;
+  }>
+) {
+  const snap = useSnapshot(globalFilterStore);
+  const memoKeys = props.keys.map((key) => snap[key]);
+  const MemoChild = useMemo(() => props.children, memoKeys);
+  return <>{MemoChild}</>;
+}
 function GlobalFilter() {
   const globalFilterSnap = useSnapshot(globalFilterStore);
   const breadcrumb = useBreadcrumb();
-
   return (
     <div>
       <div className=" flex my-4 justify-between items-center">

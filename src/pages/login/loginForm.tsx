@@ -20,7 +20,6 @@ export default function LoginForm(props: { goRegister: () => void }) {
     enabled: false,
   });
 
-  console.log(userStore);
   if (userStore.userid && userStore.token) {
     navigate("/dashboard");
     return null;

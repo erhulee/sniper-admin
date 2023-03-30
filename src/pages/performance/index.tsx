@@ -5,6 +5,7 @@ import WebVitalChart from "./components/WebVitalChart";
 import { getWebVitals } from "@/api/performance";
 import dayjs from "dayjs";
 import Loading from "@/components/loading";
+import { GlobalMemoWrap } from "@/components/global-filter";
 const tooltipsMap: Record<string, string> = {
   TTFB: "浏览器开始收到服务器响应数据的时间(后台处理时间+重定向时间)",
   LCP: "最大内容绘制，测量加载性能。为了提供良好的用户体验，LCP 应在页面首次开始加载后的2.5 秒内发生。",
@@ -34,7 +35,7 @@ function computeProportion(trendData: any[]) {
     bad: (resultCount.bad / countAll).toFixed(2),
   };
 }
-export default function Performance() {
+function PerformanceInner() {
   const globalFilterSnap = useSnapshot(globalFilterStore);
   let cardsData: any = [];
 
@@ -89,5 +90,13 @@ export default function Performance() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function Performance() {
+  return (
+    <GlobalMemoWrap keys={["startDate", "endDate"]}>
+      <PerformanceInner />
+    </GlobalMemoWrap>
   );
 }

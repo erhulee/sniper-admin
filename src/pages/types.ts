@@ -2,7 +2,7 @@ export type DateTime = {
   raw_date: Date
   formate: string
 }
-export enum AlarmOprator {
+export enum AlarmOperator {
   bg, // big
   ls, // less
   eq // equal
@@ -10,8 +10,9 @@ export enum AlarmOprator {
 
 export type AlarmRule = {
   name: string
-  oprator: AlarmOprator
-  value: number
+  operator: AlarmOperator
+  value: number,
+  webhook: string
 }
 
 export type Buzzer = {
@@ -29,3 +30,8 @@ export type Project = {
   uid: string
   _id: string
 }
+
+
+type PromiseType<T extends unknown> = T extends Promise<infer T> ? T : never;
+export type ReturnAPIResultType<T extends (...args: any) => any> = T extends (...args: any) => infer R ? PromiseType<R> : any;
+
