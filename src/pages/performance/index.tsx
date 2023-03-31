@@ -6,12 +6,8 @@ import { getWebVitals } from "@/api/performance";
 import dayjs from "dayjs";
 import Loading from "@/components/loading";
 import { GlobalMemoWrap } from "@/components/global-filter";
-const tooltipsMap: Record<string, string> = {
-  TTFB: "浏览器开始收到服务器响应数据的时间(后台处理时间+重定向时间)",
-  LCP: "最大内容绘制，测量加载性能。为了提供良好的用户体验，LCP 应在页面首次开始加载后的2.5 秒内发生。",
-  FID: "首次输入延迟，测量交互性。为了提供良好的用户体验，页面的 FID 应为100 毫秒或更短。",
-  CLS: "累积布局偏移，测量视觉稳定性。为了提供良好的用户体验，页面的 CLS 应保持在 0.1. 或更少。",
-};
+import { subscribeKey } from "valtio/utils";
+import { tooltipsMap } from "./constant";
 
 function computeProportion(trendData: any[]) {
   const resultCount: any = {
@@ -48,9 +44,16 @@ function PerformanceInner() {
       const endDate = snap.endDate.valueOf();
       return getWebVitals(startDate, endDate);
     },
+    // enabled: false,
   });
 
+  // subscribeKey(globalFilterStore, "selectedProject", () => {
+  //   query.refetch();
+  //   console.log("refetch");
+  // });
+
   const { isSuccess, data, isFetching } = query;
+
   if (isSuccess) {
     const webVitals: any[] = data?.data;
     cardsData = webVitals.map((webvital) => {

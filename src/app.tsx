@@ -5,7 +5,7 @@ import Errors from "./pages/errors";
 import JsErrorPanel from "./pages/errors/error-detail-pages/js-error-panel";
 import UserBehavior from "./pages/user-behavior";
 import Alarm from "./pages/alarm";
-import Trace from "./pages/trace";
+import TracePage from "./pages/trace";
 import SourceMap from "./pages/errors/sourcemap";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -42,7 +42,7 @@ function App() {
         },
         {
           path: "trace",
-          element: <Trace></Trace>,
+          element: <TracePage></TracePage>,
         },
         {
           path: "alarm",

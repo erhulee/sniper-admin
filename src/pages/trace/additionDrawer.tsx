@@ -1,68 +1,49 @@
-import { Button, Card, Drawer, Form, Input, Select } from 'antd'
-import { ModalStatus, TraceInfo, TraceType } from './type'
-// import { useForm } from "antd/es/form/Form";
-import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
-import { addTrace } from '../../api/trace'
-import { cloneDeep } from 'lodash'
-const TypeEnumMap = {
-  [TraceType.Business]: '业务埋点',
-  [TraceType.Performance]: '性能埋点'
-}
-const Item = Form.Item
-const useForm = Form.useForm
+import { Button, Drawer, Form, Input, Select } from "antd";
+import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
+import { addTrace, Trace, TraceType } from "../../api/trace";
+import { cloneDeep } from "lodash";
+import {
+  formItemLayout,
+  formItemLayoutWithOutLabel,
+  TypeEnumMap,
+} from "./constants";
 
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 5 }
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 20 }
-  }
-}
-const formItemLayoutWithOutLabel = {
-  wrapperCol: {
-    xs: { span: 24, offset: 0 },
-    sm: { span: 20, offset: 5 }
-  }
-}
+const Item = Form.Item;
+const useForm = Form.useForm;
 
 export default function AdditionDrawer(props: {
-  visible: boolean
-  close: () => void
-  refresh: () => void
-  status: null | TraceInfo
+  visible: boolean;
+  close: () => void;
+  refresh: () => void;
+  status: null | Trace;
 }) {
-  const { status, close, refresh } = props
-  const [form] = useForm()
+  const { status, close, refresh } = props;
+  const [form] = useForm();
 
-  console.log('status:', status)
   if (status !== null) {
-    const value = cloneDeep(status)
-    delete value._id
-    delete value.uid
-    form.setFieldsValue(value)
+    const value = cloneDeep(status);
+    delete value._id;
+    delete value.uid;
+    form.setFieldsValue(value);
   }
 
   const handleSubmit = () => {
-    addTrace(form.getFieldsValue())
-    form.resetFields()
-    close()
-    refresh()
-  }
+    addTrace(form.getFieldsValue());
+    form.resetFields();
+    close();
+    refresh();
+  };
   const handleClose = () => {
     if (status !== null) {
-      // form.resetFields()
-      form.setFieldsValue({})
+      form.setFieldsValue({});
     }
-    close()
-  }
+    close();
+  };
   const handleChange = (index: number, value: string) => {
-    const formValue = form.getFieldValue('properties')
-    formValue[index] = value
-    form.setFieldValue('properties', formValue)
-  }
+    const formValue = form.getFieldValue("properties");
+    formValue[index] = value;
+    form.setFieldValue("properties", formValue);
+  };
 
   return (
     <Drawer onClose={handleClose} open={props.visible} title="添加埋点">
@@ -89,22 +70,20 @@ export default function AdditionDrawer(props: {
               {fields.map((field, index) => (
                 <Item
                   key={index}
-                  label={index === 0 ? '相关属性' : ''}
+                  label={index === 0 ? "相关属性" : ""}
                   {...(index === 0
                     ? formItemLayout
                     : formItemLayoutWithOutLabel)}
                 >
                   <div className=" flex">
-                    {/* <Item> */}
                     <Input
                       placeholder="请输入属性名"
                       className=" mr-4"
                       onChange={(e) => {
-                        console.log(e)
-                        handleChange(index, e.target.value)
+                        console.log(e);
+                        handleChange(index, e.target.value);
                       }}
                     />
-                    {/* </Item> */}
                     {fields.length > 1 && (
                       <MinusOutlined
                         className=" cursor-pointer text-red-700 hover:text-red-400"
@@ -137,5 +116,5 @@ export default function AdditionDrawer(props: {
         </Item>
       </Form>
     </Drawer>
-  )
+  );
 }
