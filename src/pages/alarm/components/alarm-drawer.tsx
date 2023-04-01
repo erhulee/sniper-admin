@@ -1,39 +1,4 @@
-import { addBuzzer, SupportRuleName } from "@/api/alaram";
-const conditionOptions = [
-  {
-    label: "错误异常",
-    options: [
-      { label: "JS错误", value: SupportRuleName.JS_ERROR },
-      { label: "资源错误", value: SupportRuleName.RESOURCE_ERROR },
-    ],
-  },
-  {
-    label: "性能异常",
-    options: [
-      { label: "FCP", value: SupportRuleName.FCP },
-      { label: "TTFB", value: SupportRuleName.TTFB },
-      { label: "CLS", value: SupportRuleName.CLS },
-      { label: "FID", value: SupportRuleName.FID },
-      { label: "LCP", value: SupportRuleName.LCP },
-    ],
-  },
-];
-
-const operator = [
-  {
-    label: ">",
-    value: AlarmOperator.bg,
-  },
-  {
-    label: "=",
-    value: AlarmOperator.eq,
-  },
-  {
-    label: "<",
-    value: AlarmOperator.ls,
-  },
-];
-
+import { addBuzzer } from "@/api/alaram";
 import {
   Button,
   Col,
@@ -43,21 +8,18 @@ import {
   InputNumber,
   Row,
   Select,
+  Switch,
 } from "antd";
-import { AlarmOperator } from "../types";
+import { conditionOptions, operator } from "../constants";
 const Item = Form.Item;
 const useForm = Form.useForm;
-type Props = {
-  visible: boolean;
-  close: () => void;
-};
 
-function AlarmDrawer(props: Props) {
+function AlarmDrawer(props: { visible: boolean; close: () => void }) {
   const [form] = useForm();
   const handleSave = async () => {
     await addBuzzer(form.getFieldsValue());
     form.resetFields();
-    close();
+    props.close();
   };
   return (
     <div>
@@ -95,7 +57,15 @@ function AlarmDrawer(props: Props) {
               </Col>
             </Row>
           </Item>
-          <Item label="飞书WebHook">
+          <Item
+            label="生效"
+            name="status"
+            initialValue={true}
+            valuePropName="checked"
+          >
+            <Switch></Switch>
+          </Item>
+          <Item label="飞书WebHook" name="webhook">
             <Input></Input>
           </Item>
           <Item>

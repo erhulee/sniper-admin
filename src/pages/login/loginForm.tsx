@@ -1,5 +1,4 @@
 import { Button, Form, Input } from "antd";
-import { useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../api/login";
@@ -9,12 +8,10 @@ import styles from "./index.module.scss";
 export default function LoginForm(props: { goRegister: () => void }) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const [formInfo, setFormInfo] = useState({});
   const { refetch, isFetching, data, isSuccess } = useQuery({
-    queryKey: ["login", formInfo],
-    queryFn: (params) => {
-      const { queryKey } = params;
-      const { username, password } = queryKey[1] as any;
+    queryKey: ["login"],
+    queryFn: () => {
+      const { username, password } = form.getFieldsValue();
       return login(username, password);
     },
     enabled: false,
@@ -50,7 +47,6 @@ export default function LoginForm(props: { goRegister: () => void }) {
               type="primary"
               className={styles.btn}
               onClick={() => {
-                setFormInfo(form.getFieldsValue());
                 refetch();
               }}
             >

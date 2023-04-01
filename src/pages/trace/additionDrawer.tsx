@@ -23,7 +23,7 @@ export default function AdditionDrawer(props: {
   if (status !== null) {
     const value = cloneDeep(status);
     delete value._id;
-    delete value.uid;
+    // delete value.uid;
     form.setFieldsValue(value);
   }
 

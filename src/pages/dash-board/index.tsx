@@ -1,11 +1,4 @@
-import {
-  UserOutlined,
-  RadarChartOutlined,
-  ExclamationCircleOutlined,
-  PlusOutlined,
-  AlertOutlined,
-  RocketOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { Layout, Menu, theme, Select, Avatar, Button } from "antd";
 import React from "react";
 import { Navigate, Outlet } from "react-router";
@@ -24,6 +17,9 @@ import { useMutation, useQuery } from "react-query";
 import { globalFilterStore } from "../../store/globalFilter";
 import { Project } from "../types";
 import GlobalFilter from "@/components/global-filter";
+import { clearUserStore } from "@/store/userInfo";
+import { menuItems } from "./contants";
+import { useEffect } from "react";
 const { Header, Content, Sider } = Layout;
 
 function PageHeader() {
@@ -31,13 +27,17 @@ function PageHeader() {
   const [visible, open, close] = useModal();
   const navigate = useNavigate();
   const handleLogOut = () => {
-    userStore.userid = "null";
+    clearUserStore();
     navigate("/");
   };
 
   const { data, isFetching, refetch, isError, isSuccess } = useQuery({
     queryKey: "project",
     queryFn: queryProject,
+    enabled: false,
+    initialData: {
+      data: [],
+    },
   });
 
   const mutation = useMutation((newProject: any) => {
@@ -52,21 +52,17 @@ function PageHeader() {
     selectProject && (globalFilterStore.selectedProject = selectProject);
   };
 
+  useEffect(() => {
+    refetch();
+  }, []);
+
   let options: Array<{
     label: string;
     value: string | number;
-  }> = [];
-  if (isSuccess) {
-    const projectList = (data as any)?.r.data as Array<Project>;
-    options = projectList.map((project) => ({
-      label: project.projectName,
-      value: project._id,
-    }));
+  }> = (data?.data || []).map((i) => ({ label: i.projectName, value: i._id }));
 
-    if (globalFilterStore.selectedProject == null) {
-      globalFilterStore.selectedProject = projectList[0];
-    }
-  }
+  if (globalFilterStore.selectedProject == null && data?.data[0])
+    globalFilterStore.selectedProject = data.data[0];
 
   return (
     <>
@@ -116,46 +112,6 @@ function PageHeader() {
   );
 }
 
-const menuItems = [
-  {
-    key: "performance",
-    icon: React.createElement(RadarChartOutlined),
-    label: "性能分析",
-  },
-  {
-    key: "error",
-    icon: React.createElement(ExclamationCircleOutlined),
-    label: "错误分析",
-    children: [
-      {
-        key: "collection",
-        // icon: React.createElement(ExclamationCircleOutlined),
-        label: "错误收集",
-      },
-      {
-        key: "sourcemap",
-        // icon: React.createElement(CodepenCircleOutlined),
-        label: "sourcemap管理",
-      },
-    ],
-  },
-  {
-    key: "behavior",
-    icon: React.createElement(UserOutlined),
-    label: "用户行为",
-  },
-  {
-    key: "alarm",
-    label: "告警设置",
-    icon: React.createElement(AlertOutlined),
-  },
-  {
-    key: "trace",
-    icon: React.createElement(RocketOutlined),
-    label: "埋点管理",
-  },
-];
-
 const DashBoard: React.FC = () => {
   const {
     token: { colorBgContainer },
@@ -164,9 +120,9 @@ const DashBoard: React.FC = () => {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const userInfo = useSnapshot(userStore);
-  if (userInfo.userid == "null") {
-    return <Navigate to="/"></Navigate>;
-  }
+  // if (userInfo.userid) {
+  //   return <Navigate to="/"></Navigate>;
+  // }
 
   return (
     <div className={styles.page}>
