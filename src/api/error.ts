@@ -6,14 +6,12 @@ export function getErrorInfo(startDate: number, endDate: number, step?: number) 
         endDate,
     })
 }
-
 export function getJSErrorInfo(startDate: number, endDate: number, step?: number) {
     return axios.post('/jserror', {
         startDate,
         endDate,
     })
 }
-
 export function uploadSourceMap(file: Blob, appid: string) {
     const data = new FormData();
     data.append("files", file);
@@ -25,11 +23,9 @@ export function uploadSourceMap(file: Blob, appid: string) {
     })
 }
 
-
 export function querySourceMapList(): Promise<{
     data: Array<{
         fileName: string,
-
     }>
 }> {
     return axios.post('/querySourceMap', {})
@@ -41,3 +37,23 @@ export function deleteSourceMap(fileId: string, fileName: string) {
         fileName
     })
 }
+
+export enum IssueStatus {
+    UNRESOLVE,
+    RESOLVED,
+}
+
+export function queryErrorDetail(issueId: string): Promise<{
+    data: {
+        message: string
+        resolveTime: number
+        stack: string
+        status: IssueStatus
+        _id: string
+    }
+}> {
+    return axios.post("/queryIssue", {
+        issueId
+    })
+}
+

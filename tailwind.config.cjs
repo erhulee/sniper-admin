@@ -13,6 +13,7 @@ module.exports = {
         'primary-500':"#673281",
         'primary-900':"#442752",
       },
+      
     },
   },
   variants: {

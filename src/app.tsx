@@ -29,7 +29,7 @@ function App() {
           element: <Errors></Errors>,
         },
         {
-          path: "error/js/:id",
+          path: "error/js",
           element: <JsErrorPanel></JsErrorPanel>,
         },
         {

@@ -1,11 +1,24 @@
-import ErrorChart from "./error-chart";
 import styles from "./index.module.scss";
 import ErrorListTable from "./error-list-table";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { getErrorInfo, getJSErrorInfo } from "../../api/error";
 import dayjs from "dayjs";
 import { useSnapshot } from "valtio";
 import { globalFilterStore } from "@/store";
+import { Area } from "@ant-design/charts";
+
+function ErrorChart(props: { data: any[] }) {
+  const config = {
+    data: props.data,
+    xField: "date",
+    yField: "count",
+    slider: {
+      start: 0.1,
+      end: 0.9,
+    },
+  };
+  return <Area {...config}></Area>;
+}
 
 function createLineData(
   data: Array<{
