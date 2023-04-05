@@ -3577,7 +3577,7 @@ function RrwebPlayer() {
   }, []);
 
   return (
-    <div ref={ref} className="  h-full " style={{ height: "600px" }}></div>
+    <div ref={ref} className="  h-full " style={{ height: "700px" }}></div>
   );
 }
 
