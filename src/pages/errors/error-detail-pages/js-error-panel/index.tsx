@@ -1,16 +1,15 @@
-import { Column } from "@ant-design/charts";
-import MacIcon from "../../../../assets/icons/MacIcon";
-import WindowsIcon from "../../../../assets/icons/WindowsIcon";
-import DigitalCard from "../../../../components/digital-card";
-import TimeFilter from "../../../../components/time-filter";
-import ErrorPathList from "./components/error-path-list";
 import { useLocation } from "react-router-dom";
-import { queryErrorDetail } from "@/api/error";
+import { queryErrorDetail, queryIssueData } from "@/api/error";
 import { useQuery } from "react-query";
 import QueryOuter from "@/wrapper/QueryOuter";
 
 import ErrorStack from "./components/stack-card";
 import ActionManager from "./components/actionManager";
+import IssueDetail from "./components/issueDetail";
+import { globalFilterStore } from "@/store";
+import RrwebPlayer from "./components/rrwebPlayer";
+import Modal from "antd/es/modal/Modal";
+import useModal from "@/hooks/useModal";
 function query2Object(search: string) {
   const obj: any = {};
   search.split("=").forEach((_, index, array) => {
@@ -20,29 +19,9 @@ function query2Object(search: string) {
   return obj;
 }
 
-//TODO hightlight.js
-
-function BarChart() {
-  const config = {
-    data: [],
-    xField: "城市",
-    yField: "销售额",
-    xAxis: {
-      label: {
-        autoRotate: false,
-      },
-    },
-    slider: {
-      start: 0.1,
-      end: 0.2,
-    },
-    // autoFit: true,
-    width: 100,
-  };
-  return <Column {...config} />;
-}
 function JsErrorPanel() {
   const issueId = query2Object(useLocation().search.substr(1)).issueId;
+  const [visible, open, close] = useModal();
   const issueQuery = useQuery({
     queryKey: "issue-info",
     queryFn: () => queryErrorDetail(issueId),
@@ -57,6 +36,27 @@ function JsErrorPanel() {
     },
   });
 
+  const issueDetailQuery = useQuery({
+    queryKey: [
+      "issue-detail",
+      {
+        issueId: issueId,
+        startDate: globalFilterStore.startDate,
+        endDate: globalFilterStore.endDate,
+      },
+    ],
+    queryFn: ({ queryKey }) => {
+      const { startDate, endDate, issueId } = queryKey[1] as any;
+      return queryIssueData(issueId, startDate, endDate);
+    },
+    initialData: {
+      occurrences_count: 0,
+      impacts_count: 0,
+      trendData: [],
+      paths: [],
+    },
+  });
+
   return (
     <div className="flex ">
       <div
@@ -64,9 +64,13 @@ function JsErrorPanel() {
         className="flex-1 border-r-primary-100 border-solid border-r-1 border-y-0 border-l-0  pr-5 "
       >
         <ActionManager
+          issueId={issueQuery.data?.data._id || ""}
           name={issueQuery.data?.data.message || "unknown"}
           status={issueQuery.data?.data.status || 0}
           resolvedTime={issueQuery.data?.data.resolveTime || 0}
+          handleWatchVideo={() => {
+            open();
+          }}
         ></ActionManager>
         <QueryOuter
           isSuccess={issueQuery.isSuccess}
@@ -78,41 +82,18 @@ function JsErrorPanel() {
       </div>
 
       <div style={{ flexGrow: "2", flexBasis: "1" }} className="ml-5 flex-1">
-        <div className=" font-semibold">总体概览</div>
-        <div className="grid grid-cols-2 gap-4 mt-4">
-          <DigitalCard
-            value={1000}
-            direction="horizontal"
-            unit="次"
-            specific="发生总次数"
-            className=" bg-indigo-50 p-4 rounded-lg"
-          />
-          <DigitalCard
-            value={1000}
-            direction="horizontal"
-            unit="人"
-            specific="影响人数"
-            className=" bg-indigo-50 p-4 rounded-lg"
-          />
-        </div>
-
-        <div className="flex justify-around items-center p-4 bg-primary-100 mt-5 rounded-lg ">
-          <div className="text-xl flex items-center text-primary">
-            <WindowsIcon />
-            <span className="ml-2">200</span>
-          </div>
-          <div className="text-xl flex items-center text-primary">
-            <MacIcon />
-            <span className="ml-2">200</span>
-          </div>
-        </div>
-
-        <div>
-          <TimeFilter className="my-5"></TimeFilter>
-          <BarChart></BarChart>
-          <ErrorPathList></ErrorPathList>
-        </div>
+        <IssueDetail {...issueDetailQuery.data}></IssueDetail>
       </div>
+
+      <Modal
+        open={visible}
+        onCancel={close}
+        width={"1200px"}
+        title="错误录屏"
+        footer={null}
+      >
+        <RrwebPlayer></RrwebPlayer>
+      </Modal>
     </div>
   );
 }

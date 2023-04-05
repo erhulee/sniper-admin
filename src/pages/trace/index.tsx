@@ -65,10 +65,10 @@ function TracePage() {
   return (
     <div className="flex flex-col h-full">
       <Row className=" mb-2">
-        <Col span={4} offset={17}>
+        <Col span={4} offset={18}>
           <Input placeholder="名称/描述"></Input>
         </Col>
-        <Col span={3}>
+        <Col span={2}>
           <div className=" flex">
             <Button
               onClick={handleAddClick}

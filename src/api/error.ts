@@ -57,3 +57,40 @@ export function queryErrorDetail(issueId: string): Promise<{
     })
 }
 
+
+export function updateIssueStatus(issueId: string, status: IssueStatus): Promise<any> {
+    return axios.post("/updateIssueStatus", {
+        issueId,
+        status,
+        resolveTime: status == IssueStatus.RESOLVED ? Date.now().valueOf() : 0
+    })
+}
+
+type IssueDetailResponseData = {
+    occurrences_count: number
+    impacts_count: number
+
+    // window_count: number
+    // mac_count: number
+
+    trendData: Array<
+        {
+            datetime: number
+            count: number
+        }
+    >
+
+    paths: Array<
+        {
+            _id: string,
+            occurrences_count: number
+        }
+    >
+}
+export function queryIssueData(issueId: string, startDate: number, endDate: number, step?: number): Promise<IssueDetailResponseData> {
+    return axios.post("/queryIssueDetail", {
+        issueId,
+        startDate,
+        endDate
+    })
+}

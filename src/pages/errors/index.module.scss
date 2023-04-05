@@ -1,5 +1,10 @@
-.page{
-    .filter{
-        margin-bottom: 10px;
-    }
+.page {
+  .filter {
+    margin-bottom: 10px;
+  }
+}
+:global {
+  .rr-player {
+    box-shadow: none !important;
+  }
 }

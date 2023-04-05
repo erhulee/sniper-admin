@@ -49,7 +49,6 @@ function ErrorStackItem(props: {
   }
 
   return (
-    // <Panel header={file} key={props.index}>
     <div className={"bg-gray-100 mt-2 p-2 px-4"}>
       <div className=" flex flex-row items-center py-1 bg-gray-300">
         <div className=" ml-2 text-sm">错误信息:{callee}</div>
@@ -60,7 +59,6 @@ function ErrorStackItem(props: {
 
       {props.shouldParse && <CodeEditor readonly={true} value={originCode} />}
     </div>
-    // </Panel>
   );
 }
 function ErrorStack(props: { stack: string }) {

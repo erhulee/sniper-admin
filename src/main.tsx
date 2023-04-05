@@ -9,7 +9,13 @@ import initAxios from "./api/http";
 
 initAxios();
 import { QueryClient, QueryClientProvider } from "react-query";
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 import { ReactQueryDevtools } from "react-query/devtools";
 import App from "./app";
 

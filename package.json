@@ -23,6 +23,7 @@
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.6.0",
+    "rrweb-player": "^1.0.0-alpha.4",
     "sass": "^1.57.1",
     "scss": "^0.2.4",
     "source-map": "^0.7.4",

@@ -92,3 +92,10 @@ export function queryCurrentAlarms(): Promise<{
 }> {
     return axios.post("/searchAlarams")
 }
+
+export function updateBuzzer(buzzerid: string, status: BuzzerStatus) {
+    return axios.post("/updateBuzzer", {
+        buzzerid,
+        status
+    })
+}

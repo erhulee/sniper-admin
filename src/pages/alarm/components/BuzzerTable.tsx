@@ -1,4 +1,10 @@
-import { BuzzerParams, deleteBuzzer, queryBuzzer } from "@/api/alaram";
+import {
+  BuzzerParams,
+  BuzzerStatus,
+  deleteBuzzer,
+  queryBuzzer,
+  updateBuzzer,
+} from "@/api/alaram";
 import { ReturnAPIResultType } from "@/pages/types";
 import QueryOuter from "@/wrapper/QueryOuter";
 import { Button, Switch, Table, Tag } from "antd";
@@ -75,7 +81,18 @@ export default function BuzzerTable(props: {
               dataIndex: "status",
               title: "生效",
               render: (value: any, record: any) => {
-                return <Switch checked={value}></Switch>;
+                return (
+                  <Switch
+                    defaultChecked={value}
+                    // checked={value}
+                    onChange={(v) => {
+                      updateBuzzer(
+                        record.bid,
+                        v ? BuzzerStatus.enable : BuzzerStatus.disable
+                      );
+                    }}
+                  ></Switch>
+                );
               },
             },
             {
