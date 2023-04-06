@@ -50,3 +50,15 @@ export default defineConfig({
 这里的 endpoint 是自动上传 sourceMap 的地址，其核心原理也是使用的 cdn
 
 ## 使用NPM包
+```bash
+yarn add sniper-web-monitor
+```
+
+```bash
+import WebMonitor from "sniper-web-monitor"
+const webMonitor = new WebMonitor(
+         "平台上申请的 appid",
+         "post",
+         "xhr");
+WebMonitor.start();
+```
