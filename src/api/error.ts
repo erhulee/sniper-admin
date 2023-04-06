@@ -94,3 +94,15 @@ export function queryIssueData(issueId: string, startDate: number, endDate: numb
         endDate
     })
 }
+
+export function queryRrWebTask(issueContent: string): Promise<{
+    data: {
+        _id: string,
+        rrwebStack: any[]
+    },
+    ok: boolean
+}> {
+    return axios.post('/queryVideoStack', {
+        issueContent
+    })
+}

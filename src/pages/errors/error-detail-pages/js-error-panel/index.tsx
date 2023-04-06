@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { queryErrorDetail, queryIssueData } from "@/api/error";
+import { queryErrorDetail, queryIssueData, queryRrWebTask } from "@/api/error";
 import { useQuery } from "react-query";
 import QueryOuter from "@/wrapper/QueryOuter";
 
@@ -57,6 +57,26 @@ function JsErrorPanel() {
     },
   });
 
+  const videoStackQuery = useQuery({
+    queryKey: [
+      "video-stack",
+      {
+        issueContent: issueQuery.data?.data.message || "",
+      },
+    ],
+    queryFn: ({ queryKey }) => {
+      const message = (queryKey[1] as any).issueContent;
+      return queryRrWebTask(message);
+    },
+    initialData: {
+      data: {
+        _id: "",
+        rrwebStack: [],
+      },
+      ok: true,
+    },
+  });
+
   return (
     <div className="flex ">
       <div
@@ -92,7 +112,9 @@ function JsErrorPanel() {
         title="错误录屏"
         footer={null}
       >
-        <RrwebPlayer></RrwebPlayer>
+        <RrwebPlayer
+          stack={videoStackQuery.data?.data.rrwebStack ?? []}
+        ></RrwebPlayer>
       </Modal>
     </div>
   );
