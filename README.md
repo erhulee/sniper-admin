@@ -25,6 +25,7 @@
 只有 appid 是必须填写的，可以简写 `var webMonitor = new window.WebMonitor("平台上申请的 appid"）`
 
 ## 使用Vite插件一键导入
+> 其核心原理也是使用的 cdn
 
 ```bash
 yarn add sniper-vite-plugin
@@ -47,7 +48,7 @@ export default defineConfig({
 })
 ```
 
-这里的 endpoint 是自动上传 sourceMap 的地址，其核心原理也是使用的 cdn
+这里的 endpoint 是自动上传 sourceMap 的地址
 
 ## 使用NPM包
 ```bash
