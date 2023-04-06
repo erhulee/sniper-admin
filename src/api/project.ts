@@ -23,6 +23,9 @@ export function addProject(params: ProjectParams) {
     return axios.post("/addProject", params)
 }
 
+export function deleteProject(projectId: string) {
+    return axios.post("/deleteProject", { projectId })
+}
 export function queryProject(): Promise<{
     data: any[]
 }> {

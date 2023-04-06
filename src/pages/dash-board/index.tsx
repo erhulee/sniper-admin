@@ -1,6 +1,20 @@
-import { PlusOutlined } from "@ant-design/icons";
-import { Layout, Menu, theme, Select, Avatar, Button } from "antd";
+import {
+  PlusOutlined,
+  DownOutlined,
+  CloseCircleOutlined,
+} from "@ant-design/icons";
+import {
+  Layout,
+  Menu,
+  theme,
+  Select,
+  Avatar,
+  Button,
+  Dropdown,
+  Popconfirm,
+} from "antd";
 import React from "react";
+import type { MenuProps } from "antd";
 import { Navigate, Outlet } from "react-router";
 import styles from "./index.module.scss";
 import logo from "../../assets/logo.png";
@@ -11,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import logOutImg from "../../assets/logout.png";
 import { useSnapshot } from "valtio";
 import { userStore } from "../../store";
-import { addProject, queryProject } from "../../api/project";
+import { addProject, deleteProject, queryProject } from "../../api/project";
 import CopyContent from "../../components/copy-content";
 import { useMutation, useQuery } from "react-query";
 import { globalFilterStore } from "../../store/globalFilter";
@@ -45,22 +59,48 @@ function PageHeader() {
   });
 
   const handleSelectChange = (projectId: string) => {
-    const projectList = (data as any)?.r.data as Array<Project>;
+    const projectList = (data as any)?.data as Array<Project>;
     const selectProject = projectList.find(
       (project) => project._id === projectId
     );
     selectProject && (globalFilterStore.selectedProject = selectProject);
   };
 
+  const handleDeleteProject = async (projectId: string) => {
+    try {
+      await deleteProject(projectId);
+      if (globalFilterStore.selectedProject?._id == projectId)
+        globalFilterStore.selectedProject = null;
+      refetch();
+    } catch {}
+  };
+
   useEffect(() => {
     refetch();
   }, []);
 
-  let options: Array<{
-    label: string;
-    value: string | number;
-  }> = (data?.data || []).map((i) => ({ label: i.projectName, value: i._id }));
-
+  const items: MenuProps["items"] = (data?.data || []).map((i) => ({
+    key: i._id,
+    label: (
+      <div className="flex justify-between ">
+        <div onClick={() => handleSelectChange(i._id)} className="flex-1 ">
+          {i.projectName}
+        </div>
+        <Popconfirm
+          onConfirm={() => {
+            handleDeleteProject(i._id);
+          }}
+          title="删除项目"
+          description="删除后不可找回?"
+          okText="确认"
+          cancelText="取消"
+        >
+          <CloseCircleOutlined className="hover:bg-slate-300  rounded-full p-1" />
+        </Popconfirm>
+      </div>
+    ),
+    value: i._id,
+  }));
   if (globalFilterStore.selectedProject == null && data?.data[0])
     globalFilterStore.selectedProject = data.data[0];
 
@@ -84,15 +124,17 @@ function PageHeader() {
           <CopyContent
             content={globalFilterStore.selectedProject?._id}
           ></CopyContent>
-          <Select
-            options={options}
-            style={{
-              width: "100px",
-            }}
-            loading={isFetching}
-            value={globalFilterStore.selectedProject?.projectName}
-            onChange={handleSelectChange}
-          ></Select>
+
+          <Dropdown menu={{ items }}>
+            <div
+              className=" flex justify-between items-center  font-black font-normal  rounded-md mr-2 bg-white h-8 px-4 border border-solid border-gray-600 "
+              style={{ lineHeight: "32px" }}
+            >
+              {globalFilterStore.selectedProject?.projectName}
+              <DownOutlined className="ml-2" />
+            </div>
+          </Dropdown>
+
           <Button
             onClick={() => open()}
             type="primary"
