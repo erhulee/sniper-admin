@@ -1,0 +1,34 @@
+.header {
+  --backgroundColor: #252226;
+  --primaryColor: #673281;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--backgroundColor);
+  .left {
+    display: flex;
+    align-items: center;
+    .logo {
+      width: 30px;
+      height: 30px;
+    }
+    .name {
+      color: white;
+      margin-left: 2rem;
+      font-weight: bold;
+    }
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
+    .btn {
+      margin-left: 10px;
+    }
+  }
+}
+
+:global {
+  .ant-layout-sider-trigger {
+    background-color: var(--backgroundColor);
+  }
+}

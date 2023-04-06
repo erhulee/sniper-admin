@@ -7,7 +7,7 @@ import QueryOuter from "@/wrapper/QueryOuter";
 import { AlarmChart } from "./components/AlarmChart";
 import AlarmList from "./components/AlarmList";
 import AlarmDrawer from "./components/alarm-drawer";
-import useModal from "../dash-board/useModal";
+import useModal from "@/hooks/useModal";
 
 function AlarmPage() {
   const snap = useSnapshot(globalFilterStore);

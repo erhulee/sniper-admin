@@ -1,29 +1,29 @@
-import { Modal, Form, Input, Select } from 'antd'
-import { addProject, ProjectParams, ProjectType } from '../../api/project'
-import styles from './index.module.scss'
+import { ProjectParams, ProjectType } from "@/api/project";
+import { Modal, Form, Input, Select } from "antd";
+import styles from "./index.module.scss";
 type Props = {
-  visible: boolean
-  open: () => void
-  close: () => void
-  updateProjectList: (params: any) => void
-}
-const { TextArea } = Input
+  visible: boolean;
+  open: () => void;
+  close: () => void;
+  updateProjectList: (params: any) => void;
+};
+const { TextArea } = Input;
 export default function ProjectFormModal(props: Props) {
-  const { visible, close } = props
-  const [form] = Form.useForm()
+  const { visible, close } = props;
+  const [form] = Form.useForm();
   const handleSave = async () => {
-    const params: ProjectParams = form.getFieldsValue()
-    props.updateProjectList(params)
-    close()
-  }
+    const params: ProjectParams = form.getFieldsValue();
+    props.updateProjectList(params);
+    close();
+  };
   const handleCancel = () => {
-    form.resetFields()
-    close()
-  }
+    form.resetFields();
+    close();
+  };
   return (
     <Modal
       open={visible}
-      title={'添加项目'}
+      title={"添加项目"}
       okType="primary"
       okText="保存"
       cancelText="取消"
@@ -31,7 +31,7 @@ export default function ProjectFormModal(props: Props) {
       onOk={handleSave}
       onCancel={handleCancel}
     >
-      <div style={{ padding: '5px', marginTop: '10px' }}>
+      <div style={{ padding: "5px", marginTop: "10px" }}>
         <Form labelCol={{ span: 4 }} labelAlign="left" form={form}>
           <Form.Item label="名称" name="projectName">
             <Input></Input>
@@ -40,13 +40,13 @@ export default function ProjectFormModal(props: Props) {
             <Select
               options={[
                 {
-                  label: '网站',
-                  value: ProjectType.web
+                  label: "网站",
+                  value: ProjectType.web,
                 },
                 {
-                  label: '微信小程序',
-                  value: ProjectType.wxApp
-                }
+                  label: "微信小程序",
+                  value: ProjectType.wxApp,
+                },
               ]}
             ></Select>
           </Form.Item>
@@ -56,5 +56,5 @@ export default function ProjectFormModal(props: Props) {
         </Form>
       </div>
     </Modal>
-  )
+  );
 }
