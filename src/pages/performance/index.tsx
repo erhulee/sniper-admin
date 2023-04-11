@@ -18,8 +18,8 @@ function computeProportion(trendData: any[]) {
 
   let countAll = 0;
   trendData.forEach((data) => {
-    const { dgree, count } = data;
-    resultCount[dgree] += count;
+    const { degree, count } = data;
+    resultCount[degree] += count;
     countAll += count;
   });
 
@@ -73,11 +73,11 @@ function PerformanceInner() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className=" text-xl font-semibold">Web Vital 概览</div>
+      <div className=" text-xl font-semibold mb-4">Web Vital 概览</div>
 
       {isFetching && <Loading></Loading>}
       {!isFetching && isSuccess && (
-        <div className=" grid grid-cols-3 mt-10 gap-10">
+        <div className=" flex flex-col gap-4">
           {cardsData.map((cardData: any) => {
             return (
               <WebVitalChart

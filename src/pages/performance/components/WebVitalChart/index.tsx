@@ -1,5 +1,5 @@
 import { QuestionCircleOutlined } from "@ant-design/icons";
-import { Checkbox, Radio, Tooltip } from "antd";
+import { Button, Checkbox, Collapse, Radio, Tooltip } from "antd";
 import BluteChart from "./BluteChart";
 import IconBad from "./icons/IconBad";
 import IconNormal from "./icons/IconNormal";
@@ -57,18 +57,18 @@ function WebVitalChart(props: WebVitalChartProps) {
   const bad = (proportion.bad * 100).toFixed(0);
 
   return (
-    <div
-      className={`${className} border  border-gray-light rounded-lg px-6 py-4 bg-stone-50 border-stone-300 border-solid `}
-    >
-      <div className="">
-        <div className="text-gray-default flex flex-row items-center mb-4">
-          <span className="font-semibold text-gray-dark mr-4 text-xl ">
-            {title}
-          </span>
-          <Tooltip title={tooltip}>
-            <QuestionCircleOutlined></QuestionCircleOutlined>
-          </Tooltip>
-        </div>
+    <Collapse defaultActiveKey={["1"]}>
+      <Collapse.Panel
+        header={
+          <div className="text-gray-default flex items-start mb-4 flex-col">
+            <span className="font-semibold text-gray-dark mr-4 text-xl ">
+              {title}
+            </span>
+            <div className="my-2">{tooltip}</div>
+          </div>
+        }
+        key="1"
+      >
         <div className="flex flex-row items-center">
           <span className="flex flex-row items-center mr-8">
             <IconSmile></IconSmile>
@@ -90,8 +90,8 @@ function WebVitalChart(props: WebVitalChartProps) {
         {path_performance.map((pathItem) => (
           <SelectItem {...pathItem}></SelectItem>
         ))}
-      </div>
-    </div>
+      </Collapse.Panel>
+    </Collapse>
   );
 }
 export default WebVitalChart;

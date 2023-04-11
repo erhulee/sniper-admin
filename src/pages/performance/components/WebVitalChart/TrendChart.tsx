@@ -7,8 +7,14 @@ function TrendChart(props: { data: any[] }) {
     data: props.data || [],
     xField: "date",
     yField: "count",
-    seriesField: "dgree",
-    color: ["#1979C9", "#D62A0D", "#FAA219"],
+    seriesField: "degree",
+    color: ({ degree }: any) => {
+      return degree === "bad"
+        ? "#F4664A"
+        : degree === "good"
+        ? "#30BF78"
+        : "#FAAD14";
+    },
   };
 
   return <Line {...config} />;

@@ -12,9 +12,10 @@ function ErrorChart(props: { data: any[] }) {
     data: props.data,
     xField: "date",
     yField: "count",
+    seriesField: "type",
     slider: {
-      start: 0.1,
-      end: 0.9,
+      start: 0,
+      end: 1,
     },
   };
   return <Area {...config}></Area>;
@@ -26,12 +27,20 @@ function createLineData(
     logger: any[];
   }>
 ) {
-  return data.map((item) => {
-    return {
-      date: dayjs(item.time).format("MM月DD日HH时"),
-      count: item.logger?.length || 0,
-    };
-  });
+  const types = ["JS", "Resource", "HTTP", "Collapse"];
+  return data.reduce<Array<{ date: string; count: number; type: string }>>(
+    (pre, curItem) => {
+      types.forEach((type) => {
+        pre.push({
+          date: dayjs(curItem.time).format("MM月DD日HH时"),
+          count: curItem.logger.filter((i) => i.type == type).length || 0,
+          type,
+        });
+      });
+      return pre;
+    },
+    []
+  );
 }
 
 function Errors() {
