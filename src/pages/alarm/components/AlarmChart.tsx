@@ -28,7 +28,7 @@ export function AlarmChart({
   };
 
   return (
-    <div className="  px-7 ">
+    <div className=" p-8 bg-white rounded-lg border-2 border-gray-100">
       <div className=" mb-4 text-xl  font-semibold ">告警个数总览(天)</div>
       <Column {...config} />
     </div>

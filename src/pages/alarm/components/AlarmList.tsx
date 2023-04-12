@@ -23,10 +23,9 @@ export default function AlarmList(props: {
   openModal: () => void;
 }) {
   const data = props.data;
-
   return (
-    <div className="">
-      <div className=" flex items-center justify-between mb-4 ">
+    <div className="p-5 overflow-hidden hover:overflow-y-auto h-full pt-0">
+      <div className=" flex items-center justify-between mb-4 sticky top-0  bg-white z-10   pt-5 pb-1 ">
         <Button icon={<SettingOutlined />}></Button>
         <div className=" text-primary-900 font-semibold text-base">
           今日告警

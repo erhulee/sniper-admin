@@ -43,15 +43,14 @@ function AlarmPage() {
 
   const [visible, open, close] = useModal();
   return (
-    <div className=" flex justify-between h-full ">
-      <div className=" mr-8  flex-1 h-full ">
+    <div className=" flex justify-between  min-h-full ">
+      <div className=" mr-6 flex-1 h-full  flex flex-col">
         <QueryOuter
           isError={BuzzerListQuery.isError || barChartQuery.isError}
           isSuccess={BuzzerListQuery.isSuccess && barChartQuery.isSuccess}
           isFetching={BuzzerListQuery.isFetching || barChartQuery.isFetching}
         >
           <AlarmChart data={barChartQuery.data?.data ?? []}></AlarmChart>
-
           <BuzzerTable
             data={BuzzerListQuery.data?.data ?? []}
             refetch={BuzzerListQuery.refetch}
@@ -59,8 +58,8 @@ function AlarmPage() {
         </QueryOuter>
       </div>
       <div
-        className="p-5 border border-solid border-primary-100 bg-slate-50 w-28 "
-        style={{ minWidth: "300px" }}
+        className="border border-solid  bg-white w-28   border-gray-100 border-2 rounded-lg"
+        style={{ minWidth: "350px" }}
       >
         <QueryOuter
           isError={alarmListQuery.isError}

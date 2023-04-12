@@ -7,9 +7,9 @@ type BluteChartProps = {
   className: string;
 };
 
-function BluteChart(props: BluteChartProps) {
+function BluetChart(props: BluteChartProps) {
   return (
-    <div className={`${props.className} flex flex-row  `}>
+    <div className={`${props.className} flex flex-row h-5 `}>
       <div
         style={{
           backgroundColor: "#2BA185",
@@ -34,4 +34,5 @@ function BluteChart(props: BluteChartProps) {
     </div>
   );
 }
-export default BluteChart;
+
+export default BluetChart;

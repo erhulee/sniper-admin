@@ -50,7 +50,7 @@ const DashBoard: React.FC = () => {
                 padding: 24,
                 margin: 0,
                 minHeight: 280,
-                background: colorBgContainer,
+                // background: colorBgContainer,
                 overflow: "scroll",
               }}
             >

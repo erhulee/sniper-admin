@@ -1,6 +1,5 @@
 import Login from "./pages/login";
 import DashBoard from "./pages/dash-board";
-import Performance from "./pages/performance";
 import Errors from "./pages/errors";
 import JsErrorPanel from "./pages/errors/error-detail-pages/js-error-panel";
 import UserBehavior from "./pages/user-behavior";
@@ -8,6 +7,7 @@ import Alarm from "./pages/alarm";
 import TracePage from "./pages/trace";
 import SourceMap from "./pages/errors/sourcemap";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { WebVitalPerformance } from "./pages/performance";
 
 function App() {
   const router = createBrowserRouter([
@@ -21,7 +21,7 @@ function App() {
       children: [
         {
           path: "performance",
-          element: <Performance></Performance>,
+          element: <WebVitalPerformance></WebVitalPerformance>,
         },
 
         {
