@@ -70,7 +70,7 @@ function Errors() {
   }
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} bg-white p-8`}>
       <ErrorChart data={lineChartData}></ErrorChart>
       <ErrorListTable data={tableData}></ErrorListTable>
     </div>

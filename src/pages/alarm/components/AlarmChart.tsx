@@ -1,4 +1,5 @@
 import { Column } from "@ant-design/charts";
+import dayjs from "dayjs";
 
 export function AlarmChart({
   data,
@@ -6,7 +7,10 @@ export function AlarmChart({
   data: Array<{ datetime: string; count: number }>;
 }) {
   const config = {
-    data,
+    data: data.map((i) => ({
+      ...i,
+      datetime: dayjs(i.datetime).format("MM-DD HH时"),
+    })),
     xField: "datetime",
     yField: "count",
     autoFit: true,
@@ -28,7 +32,7 @@ export function AlarmChart({
   };
 
   return (
-    <div className=" p-8 bg-white rounded-lg border-2 border-gray-100">
+    <div className="bg-white  p-8">
       <div className=" mb-4 text-xl  font-semibold ">告警个数总览(天)</div>
       <Column {...config} />
     </div>

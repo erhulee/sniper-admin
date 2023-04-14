@@ -43,8 +43,8 @@ function AlarmPage() {
 
   const [visible, open, close] = useModal();
   return (
-    <div className=" flex justify-between  min-h-full ">
-      <div className=" mr-6 flex-1 h-full  flex flex-col">
+    <div className=" flex justify-between  min-h-full h-full overflow-visible ">
+      <div className=" mr-6 flex-1 h-full flex flex-col w-28">
         <QueryOuter
           isError={BuzzerListQuery.isError || barChartQuery.isError}
           isSuccess={BuzzerListQuery.isSuccess && barChartQuery.isSuccess}
@@ -57,10 +57,7 @@ function AlarmPage() {
           ></BuzzerTable>
         </QueryOuter>
       </div>
-      <div
-        className="border border-solid  bg-white w-28   border-gray-100 border-2 rounded-lg"
-        style={{ minWidth: "350px" }}
-      >
+      <div className=" bg-white w-28 " style={{ minWidth: "350px" }}>
         <QueryOuter
           isError={alarmListQuery.isError}
           isSuccess={alarmListQuery.isSuccess}

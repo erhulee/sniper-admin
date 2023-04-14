@@ -40,8 +40,8 @@ export default function BuzzerTable(props: {
   }
 
   return (
-    <div className=" mt-4 bg-primary-20 flex flex-col bg-white flex-1 rounded-lg border-2 border-gray-100  ">
-      <div className=" flex justify-end bg-primary-900 p-2 pr-4 ">
+    <div className=" mt-4 bg-primary-20 flex flex-col bg-white flex-1 rounded-lg border-2 border-gray-100    ">
+      {/* <div className=" flex justify-end bg-primary-900 p-2 pr-4 ">
         <Button size="small" type="primary" className=" mr-2">
           添加
         </Button>
@@ -51,7 +51,7 @@ export default function BuzzerTable(props: {
         >
           删除
         </Button>
-      </div>
+      </div> */}
       <div className="flex-1 h-full ">
         <Table
           dataSource={generateTableData(props.data)}
