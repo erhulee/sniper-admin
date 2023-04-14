@@ -8,7 +8,7 @@ export enum Trend {
     More,
     Less
 }
-export type BehaviorCategory = "PV" | "UV" | "BounceRate"
+export type BehaviorCategory = "PV" | "UV" | "BounceRate" | "New"
 export type BehaviorData = {
     core: {
         [key in BehaviorCategory]: {
@@ -22,11 +22,11 @@ export type BehaviorData = {
     },
     barData: Array<{
         datetime: string,
-        pathname: string,
+        path: string,
         count: number
     }>,
     trendData: Array<{
-        pathname: string,
+        path: string,
         trend: Array<{
             datatime: string,
             count: number

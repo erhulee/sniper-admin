@@ -20,7 +20,7 @@ function DigitalRatioCard(props: Props) {
         <span className=" text-gray-400 mr-2">{des}</span>
         <span>{ratio}</span>
         <span>
-          {trend == Trend.More ? <ArrowDownOutlined /> : <ArrowUpOutlined />}
+          {trend == Trend.More ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
         </span>
       </div>
     </div>

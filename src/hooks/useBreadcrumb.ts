@@ -4,12 +4,13 @@ const path2breadcrumb: any = {
   performance: '性能分析',
   error: '错误分析',
   collection: "错误收集",
-  sourcemap:"sourcemap",
+  sourcemap: "sourcemap",
   user: '埋点数据',
   js: '运行时错误',
   http: 'HTTP错误',
   alarm: '告警设置',
-  trace: "埋点管理"
+  trace: "埋点管理",
+  behavior: "用户行为"
 }
 function useBreadcrumb() {
   const location = useLocation()

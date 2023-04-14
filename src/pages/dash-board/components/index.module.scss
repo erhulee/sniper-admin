@@ -33,5 +33,14 @@
   }
   .ant-layout-content {
     padding: 0 !important;
+    overflow: initial !important;
+    // overflow: hidden !important;
+  }
+  // .#root > div > section > section {
+  //   overflow-y: scroll !important;
+  // }
+  .ant-layout .ant-layout .ant-layout {
+    overflow-y: scroll !important;
+    overflow-x: visible;
   }
 }

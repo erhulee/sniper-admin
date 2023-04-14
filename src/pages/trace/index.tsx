@@ -64,30 +64,32 @@ function TracePage() {
 
   return (
     <div className="flex flex-col h-full">
-      <Row className=" mb-2">
-        <Col span={4} offset={18}>
+      <div
+        className="flex justify-between p-4 items-center text-xl font-semibold mb-4 
+      bg-white  border border-solid  rounded-md border-gray-50"
+      >
+        <span>埋点管理</span>
+        <div className=" flex">
           <Input placeholder="名称/描述"></Input>
-        </Col>
-        <Col span={2}>
-          <div className=" flex">
-            <Button
-              onClick={handleAddClick}
-              className=" mx-3 w-full "
-              type="primary"
-              icon={<PlusCircleOutlined />}
-            >
-              新建埋点
-            </Button>
-          </div>
-        </Col>
-      </Row>
-      <div className=" flex-1  ">
+          <Button
+            onClick={handleAddClick}
+            className=" mx-3 w-full "
+            type="primary"
+            icon={<PlusCircleOutlined />}
+          >
+            新建埋点
+          </Button>
+        </div>
+      </div>
+
+      <div className=" flex-1 ">
         <QueryOuter
           isError={isError}
           isSuccess={isSuccess}
           isFetching={isFetching}
         >
           <Table
+            className=" h-full"
             columns={tableColumns}
             dataSource={data?.data.list}
             pagination={{

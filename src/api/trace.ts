@@ -24,5 +24,15 @@ export function deleteTrace(data: { _id: string }) {
     return axios.post("/deleteTrace", data)
 }
 
+export function updateTrace(data: {
+    id: string
+    name: string,
+    des: string,
+    type: string,
+    properties: any
+}) {
+    return axios.post("/updateTrace", data)
+}
+
 
 

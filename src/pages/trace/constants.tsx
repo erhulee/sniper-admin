@@ -15,6 +15,9 @@ export const columns: any = [
     title: "埋点类型",
     dataIndex: "type",
     key: "type",
+    render: (item: TraceType) => {
+      return <div>{TypeEnumMap[item]}</div>;
+    },
   },
   {
     title: "相关属性",
@@ -24,11 +27,11 @@ export const columns: any = [
       return <div>{item.join("、")}</div>;
     },
   },
-  {
-    title: "当日上报数量",
-    dataIndex: "count",
-    key: "count",
-  },
+  // {
+  //   title: "当日上报数量",
+  //   dataIndex: "count",
+  //   key: "count",
+  // },
 ];
 
 export const TypeEnumMap = {

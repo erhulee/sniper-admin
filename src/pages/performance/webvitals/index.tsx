@@ -7,6 +7,9 @@ import { GlobalMemoWrap } from "@/components/global-filter";
 import { tooltipsMap } from "./constant";
 import { globalFilterStore } from "@/store";
 import WebVitalChart from "./components/webvital-chart";
+import { MenuUnfoldOutlined } from "@ant-design/icons";
+import { Dropdown, MenuProps, Select } from "antd";
+import { useState } from "react";
 
 function computeProportion(trendData: any[]) {
   const resultCount: any = {
@@ -30,8 +33,17 @@ function computeProportion(trendData: any[]) {
     bad: (resultCount.bad / countAll).toFixed(2),
   };
 }
+
 function PerformanceInner() {
   const globalFilterSnap = useSnapshot(globalFilterStore);
+
+  const [displayFilter, setDisplayFilter] = useState([
+    "TTFB",
+    "CLS",
+    "FID",
+    "LCP",
+    "FCP",
+  ]);
   let cardsData: any = [];
 
   const query = useQuery({
@@ -69,25 +81,44 @@ function PerformanceInner() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className=" text-xl font-semibold mb-4 bg-white py-4 px-4 border border-solid  rounded-md border-gray-50">
+      <div
+        className=" text-xl font-semibold mb-4 
+       flex justify-between items-center
+      bg-white py-4 px-4 border border-solid  rounded-md border-gray-50"
+      >
         Web Vital 概览
+        <Select
+          style={{ width: 250 }}
+          mode="multiple"
+          maxTagCount="responsive"
+          value={displayFilter}
+          options={["TTFB", "CLS", "FID", "LCP", "FCP"].map((i) => ({
+            label: i,
+            value: i,
+          }))}
+          onChange={(e) => {
+            setDisplayFilter(e);
+          }}
+        />
       </div>
       {isFetching && <Loading></Loading>}
       {!isFetching && isSuccess && (
         <div className=" grid grid-cols-2 gap-4">
-          {cardsData.map((cardData: any) => {
-            return (
-              <WebVitalChart
-                key={cardData.title}
-                title={cardData.title}
-                name={cardData.name}
-                tooltip={cardData.tooltip}
-                proportion={cardData.proportion}
-                trendData={cardData.trendData}
-                path_performance={cardData.path_performance}
-              ></WebVitalChart>
-            );
-          })}
+          {cardsData
+            .filter((i: any) => displayFilter.includes(i.title))
+            .map((cardData: any) => {
+              return (
+                <WebVitalChart
+                  key={cardData.title}
+                  title={cardData.title}
+                  name={cardData.name}
+                  tooltip={cardData.tooltip}
+                  proportion={cardData.proportion}
+                  trendData={cardData.trendData}
+                  path_performance={cardData.path_performance}
+                ></WebVitalChart>
+              );
+            })}
         </div>
       )}
     </div>

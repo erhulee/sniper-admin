@@ -9,7 +9,7 @@ const StackBar = (props: { data: BehaviorData["barData"] }) => {
     isStack: true,
     xField: "datetime",
     yField: "count",
-    seriesField: "pathname",
+    seriesField: "path",
     label: {
       // 可手动配置 label 数据标签位置
       position: "middle",
@@ -30,7 +30,7 @@ const StackBar = (props: { data: BehaviorData["barData"] }) => {
     },
   };
 
-  return <Column {...config} />;
+  return <Column {...config} legend={{ position: "top-left" }} />;
 };
 
 export default StackBar;

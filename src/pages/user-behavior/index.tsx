@@ -10,22 +10,24 @@ import { useQuery } from "react-query";
 import { useSnapshot } from "valtio";
 import DigitalRatioCard from "../../components/digital-ratio-card";
 import TrendCard from "../../components/trend-card";
-import { TrendCardData } from "../../components/trend-card/type";
 import StackBar from "./bar-chart";
 
 function generateCoreData(data?: BehaviorData) {
   if (data == null) return [];
   const core = data.core;
-  const keys = Object.keys(core) as unknown as ["PV" | "UV" | "BounceRate"];
+  const keys = Object.keys(core) as unknown as [
+    "PV" | "UV" | "BounceRate" | "New"
+  ];
   const titleMap: {
     [key in BehaviorCategory]: string;
   } = {
     PV: "浏览量(PV)",
     BounceRate: "跳出率",
     UV: "访客数(UV)",
+    New: "新用户",
   };
 
-  return keys.map((key: "PV" | "UV" | "BounceRate") => {
+  return keys.map((key: "PV" | "UV" | "BounceRate" | "New") => {
     const { rate, value, impact } = core[key].value;
     const ratio_number = Number.parseInt(rate);
     return {
@@ -41,7 +43,6 @@ function generateCoreData(data?: BehaviorData) {
 
 function UserBehavior() {
   const globalFilter = useSnapshot(globalFilterStore);
-
   const { data, isFetching } = useQuery({
     queryKey: ["behavior", globalFilter.startDate, globalFilter.endDate],
     queryFn: ({ queryKey }) => {
@@ -54,18 +55,18 @@ function UserBehavior() {
   if (isFetching) return <Loading></Loading>;
   return (
     <div>
-      <div className=" flex justify-around">
+      <div className=" flex justify-around bg-white py-8">
         {generateCoreData(data?.data).map((d) => (
           <DigitalRatioCard {...d}></DigitalRatioCard>
         ))}
       </div>
 
-      <div className="my-8">
+      <div className="my-4 bg-white p-8">
         <div className="font-semibold text-lg mb-4">页面浏览量(PV)分布图</div>
         <StackBar data={data?.data.barData || []}></StackBar>
       </div>
 
-      <div className="my-8">
+      <div className="my-4 bg-white p-8">
         <div className="font-semibold text-lg mb-4">页面跳出率分布图</div>
         <div className=" grid grid-cols-3 gap-4 mt-4 ">
           {data?.data.trendData.map((data) => (

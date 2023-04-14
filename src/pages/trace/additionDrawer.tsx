@@ -1,6 +1,6 @@
 import { Button, Drawer, Form, Input, Select } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
-import { addTrace, Trace, TraceType } from "../../api/trace";
+import { addTrace, Trace, TraceType, updateTrace } from "../../api/trace";
 import { cloneDeep } from "lodash";
 import {
   formItemLayout,
@@ -19,21 +19,27 @@ export default function AdditionDrawer(props: {
 }) {
   const { status, close, refresh } = props;
   const [form] = useForm();
-
-  if (status !== null) {
+  const isEdit = Boolean(status);
+  // 如果是编辑态，就初始化表单
+  if (isEdit) {
     const value = cloneDeep(status);
-    delete value._id;
-    // delete value.uid;
+    delete value?._id;
     form.setFieldsValue(value);
   }
-
   const handleSubmit = () => {
-    addTrace(form.getFieldsValue());
-    form.resetFields();
+    if (status !== null) {
+      const data = Object.assign(status, form.getFieldsValue());
+      data.id = data._id;
+      updateTrace(data);
+    } else {
+      addTrace(form.getFieldsValue());
+      form.resetFields();
+    }
     close();
     refresh();
   };
   const handleClose = () => {
+    form.resetFields();
     if (status !== null) {
       form.setFieldsValue({});
     }
@@ -67,39 +73,40 @@ export default function AdditionDrawer(props: {
         <Form.List name="properties">
           {(fields, { add, remove }, { errors }) => (
             <>
-              {fields.map((field, index) => (
-                <Item
-                  key={index}
-                  label={index === 0 ? "相关属性" : ""}
-                  {...(index === 0
-                    ? formItemLayout
-                    : formItemLayoutWithOutLabel)}
-                >
-                  <div className=" flex">
-                    <Input
-                      placeholder="请输入属性名"
-                      className=" mr-4"
-                      onChange={(e) => {
-                        console.log(e);
-                        handleChange(index, e.target.value);
-                      }}
-                    />
-                    {fields.length > 1 && (
-                      <MinusOutlined
-                        className=" cursor-pointer text-red-700 hover:text-red-400"
-                        onClick={() => remove(index)}
+              {fields.map((field, index) => {
+                return (
+                  <Item
+                    key={index}
+                    label={index === 0 ? "相关属性" : ""}
+                    {...(index === 0
+                      ? formItemLayout
+                      : formItemLayoutWithOutLabel)}
+                  >
+                    <div className=" flex">
+                      <Input
+                        placeholder="请输入属性名"
+                        className=" mr-4"
+                        value={form.getFieldValue("properties")[index]}
+                        onChange={(e) => {
+                          handleChange(index, e.target.value);
+                        }}
                       />
-                    )}
-                  </div>
-                </Item>
-              ))}
+                      {fields.length > 1 && (
+                        <MinusOutlined
+                          className=" cursor-pointer text-red-700 hover:text-red-400"
+                          onClick={() => remove(index)}
+                        />
+                      )}
+                    </div>
+                  </Item>
+                );
+              })}
 
               <Form.Item>
                 <Button
                   type="dashed"
                   onClick={() => add()}
                   className=" w-full"
-                  //   style={{ width: '60%' }}
                   icon={<PlusOutlined />}
                 >
                   添加属性
