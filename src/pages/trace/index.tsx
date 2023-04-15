@@ -8,6 +8,7 @@ import { useQuery } from "react-query";
 import { columns } from "./constants";
 import { useMemo } from "react";
 import QueryOuter from "@/wrapper/QueryOuter";
+import useRegisterGlobalFilter from "@/hooks/useRegisterGlobalFilter";
 
 function TracePage() {
   const [visible, open, close] = useModal();
@@ -22,7 +23,7 @@ function TracePage() {
       },
     },
   });
-
+  useRegisterGlobalFilter(refetch);
   const tableColumns = useMemo(
     () => [
       ...columns,

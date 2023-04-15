@@ -1,7 +1,9 @@
 import { proxy, subscribe } from "valtio";
 type UserStore = {
     userid?: string,
+    userAccount?: string
     token?: string
+    expire?: number
 }
 const _state = JSON.parse(localStorage.getItem('__SNIPER__USER') || "{}") as unknown as UserStore || {
     userid: undefined,

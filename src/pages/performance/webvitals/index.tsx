@@ -7,9 +7,8 @@ import { GlobalMemoWrap } from "@/components/global-filter";
 import { tooltipsMap } from "./constant";
 import { globalFilterStore } from "@/store";
 import WebVitalChart from "./components/webvital-chart";
-import { MenuUnfoldOutlined } from "@ant-design/icons";
-import { Dropdown, MenuProps, Select } from "antd";
 import { useState } from "react";
+import { Select } from "antd";
 
 function computeProportion(trendData: any[]) {
   const resultCount: any = {

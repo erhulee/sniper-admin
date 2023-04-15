@@ -4,10 +4,10 @@ import getBehavior, {
   Trend,
 } from "@/api/behavior";
 import Loading from "@/components/loading";
+import useRegisterGlobalFilter from "@/hooks/useRegisterGlobalFilter";
 import { globalFilterStore } from "@/store";
 import dayjs from "dayjs";
 import { useQuery } from "react-query";
-import { useSnapshot } from "valtio";
 import DigitalRatioCard from "../../components/digital-ratio-card";
 import TrendCard from "../../components/trend-card";
 import StackBar from "./bar-chart";
@@ -42,15 +42,19 @@ function generateCoreData(data?: BehaviorData) {
 }
 
 function UserBehavior() {
-  const globalFilter = useSnapshot(globalFilterStore);
-  const { data, isFetching } = useQuery({
-    queryKey: ["behavior", globalFilter.startDate, globalFilter.endDate],
+  const { data, isFetching, refetch } = useQuery({
+    queryKey: [
+      "behavior",
+      globalFilterStore.startDate,
+      globalFilterStore.endDate,
+    ],
     queryFn: ({ queryKey }) => {
       const startDate = dayjs(queryKey[1]).valueOf();
       const endDate = dayjs(queryKey[2]).valueOf();
       return getBehavior(startDate, endDate);
     },
   });
+  useRegisterGlobalFilter(refetch);
 
   if (isFetching) return <Loading></Loading>;
   return (

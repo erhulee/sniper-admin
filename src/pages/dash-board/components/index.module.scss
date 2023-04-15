@@ -1,9 +1,13 @@
 .header {
-  --backgroundColor: #252226;
-  --primaryColor: #673281;
+  --backgroundColor: #3b3c81;
+  --primaryColor: #6a4a9e;
   display: flex;
   justify-content: space-between;
-  background-color: var(--backgroundColor);
+  background-image: linear-gradient(
+    to right,
+    var(--backgroundColor),
+    var(--primaryColor)
+  );
   .left {
     display: flex;
     align-items: center;
@@ -28,6 +32,8 @@
 }
 
 :global {
+  --backgroundColor: #47499c;
+  --primaryColor: #7954b3;
   .ant-layout-sider-trigger {
     background-color: var(--backgroundColor);
   }
@@ -42,5 +48,8 @@
   .ant-layout .ant-layout .ant-layout {
     overflow-y: scroll !important;
     overflow-x: visible;
+  }
+  .ant-layout-sider-trigger {
+    background-color: #47499c !important;
   }
 }

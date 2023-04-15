@@ -7,14 +7,15 @@ import { useSnapshot } from "valtio";
 import { userStore } from "../../store";
 import GlobalFilter from "@/components/global-filter";
 import { menuItems } from "./contants";
-import PageHeader from "./components/pageHeader";
+import useAuth from "@/hooks/useAuth";
+import PageHeader from "./components/page-header";
 const { Content, Sider } = Layout;
 
 const DashBoard: React.FC = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-
+  useAuth();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   useSnapshot(userStore);
@@ -44,13 +45,11 @@ const DashBoard: React.FC = () => {
           </Sider>
           <Layout style={{ padding: "0 24px 24px" }}>
             <GlobalFilter></GlobalFilter>
-
             <Content
               style={{
                 padding: 24,
                 margin: 0,
                 minHeight: 280,
-                // background: colorBgContainer,
                 overflow: "scroll",
               }}
             >

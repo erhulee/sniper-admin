@@ -1,22 +1,21 @@
 import { useQuery } from "react-query";
 import { queryAlarms, queryBuzzer, queryCurrentAlarms } from "@/api/alaram";
 import { globalFilterStore } from "@/store";
-import { useSnapshot } from "valtio/react";
 import BuzzerTable from "./components/BuzzerTable";
 import QueryOuter from "@/wrapper/QueryOuter";
 import { AlarmChart } from "./components/AlarmChart";
 import AlarmList from "./components/AlarmList";
 import AlarmDrawer from "./components/alarm-drawer";
 import useModal from "@/hooks/useModal";
+import useRegisterGlobalFilter from "@/hooks/useRegisterGlobalFilter";
 
 function AlarmPage() {
-  const snap = useSnapshot(globalFilterStore);
   const barChartQuery = useQuery({
     queryKey: [
       "alarmsList",
       {
-        startDate: snap.startDate.valueOf(),
-        endDate: snap.endDate.valueOf(),
+        startDate: globalFilterStore.startDate.valueOf(),
+        endDate: globalFilterStore.endDate.valueOf(),
       },
     ],
     queryFn: ({ queryKey: [_, params] }) => {
@@ -42,6 +41,11 @@ function AlarmPage() {
   });
 
   const [visible, open, close] = useModal();
+  useRegisterGlobalFilter(() => {
+    barChartQuery.refetch();
+    alarmListQuery.refetch();
+    BuzzerListQuery.refetch();
+  });
   return (
     <div className=" flex justify-between  min-h-full h-full overflow-visible ">
       <div className=" mr-6 flex-1 h-full flex flex-col w-28">

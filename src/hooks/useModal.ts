@@ -1,7 +1,9 @@
 import { useState } from 'react'
 
-export default function useModal(): [boolean, () => void, () => void] {
-  const [vis, setVis] = useState(false)
+export default function useModal(defaultValue: boolean = false):
+  [boolean, () => void, () => void] {
+  const [vis, setVis] = useState(defaultValue);
+
   return [
     vis,
     () => {

@@ -1,4 +1,4 @@
-type BluteChartProps = {
+type BluetChartProps = {
   data: {
     good: number;
     "needs-improvement": number;
@@ -7,7 +7,7 @@ type BluteChartProps = {
   className: string;
 };
 
-function BluetChart(props: BluteChartProps) {
+function BluetChart(props: BluetChartProps) {
   return (
     <div className={`${props.className} flex flex-row h-5 `}>
       <div

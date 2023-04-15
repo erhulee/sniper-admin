@@ -7,7 +7,6 @@ import styles from "./index.module.scss";
 
 export default function LoginForm(props: { goRegister: () => void }) {
   const [form] = Form.useForm();
-  const navigate = useNavigate();
   const { refetch, isFetching, data, isSuccess } = useQuery({
     queryKey: ["login"],
     queryFn: () => {
@@ -17,18 +16,15 @@ export default function LoginForm(props: { goRegister: () => void }) {
     enabled: false,
   });
 
-  if (userStore.userid && userStore.token) {
-    navigate("/dashboard");
-    return null;
-  }
-
   if (isSuccess) {
-    const { user, token } = data as any;
+    const { user, token, expire } = data as any;
     const userid = user._id;
     userStore.userid = userid;
     userStore.token = token;
-    navigate("/dashboard");
-    return null;
+    userStore.userAccount = user.username;
+    userStore.expire = expire;
+    // navigate("/dashboard");
+    // return null;
   }
 
   return (
