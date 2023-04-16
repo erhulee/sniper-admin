@@ -1,5 +1,5 @@
 import { Layout, Menu, theme } from "antd";
-import React from "react";
+import React, { Suspense } from "react";
 import { Outlet } from "react-router";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import GlobalFilter from "@/components/global-filter";
 import { menuItems } from "./contants";
 import useAuth from "@/hooks/useAuth";
 import PageHeader from "./components/page-header";
+import Loading from "@/components/loading";
 const { Content, Sider } = Layout;
 
 const DashBoard: React.FC = () => {
@@ -53,7 +54,9 @@ const DashBoard: React.FC = () => {
                 overflow: "scroll",
               }}
             >
-              <Outlet></Outlet>
+              <Suspense fallback={<Loading></Loading>}>
+                <Outlet></Outlet>
+              </Suspense>
             </Content>
           </Layout>
         </Layout>

@@ -1,13 +1,20 @@
 import Login from "../pages/login";
 import DashBoard from "../pages/dash-board";
-import Errors from "../pages/errors";
-import JsErrorPanel from "../pages/errors/error-detail-pages/js-error-panel";
-import UserBehavior from "../pages/user-behavior";
-import Alarm from "../pages/alarm";
-import TracePage from "../pages/trace";
-import SourceMap from "../pages/errors/sourcemap";
+import React from "react";
+
+const Errors = React.lazy(() => import("../pages/errors"));
+const JsErrorPanel = React.lazy(
+  () => import("../pages/errors/error-detail-pages/js-error-panel")
+);
+const UserBehavior = React.lazy(() => import("../pages/user-behavior"));
+const Alarm = React.lazy(() => import("../pages/alarm"));
+const TracePage = React.lazy(() => import("../pages/trace"));
+const SourceMap = React.lazy(() => import("../pages/errors/sourcemap"));
+
+const WebVitalPerformance = React.lazy(
+  () => import("@/pages/performance/webvitals")
+);
 import { createBrowserRouter } from "react-router-dom";
-import { WebVitalPerformance } from "../pages/performance";
 
 export const router = createBrowserRouter([
   {
