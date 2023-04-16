@@ -6,7 +6,6 @@ import RegisterForm from "./registerForm";
 export default function Login() {
   const [isLoginStage, setIsLoginStage] = useState(true);
   useAuth();
-
   return (
     <div className={`${styles.page}`}>
       {isLoginStage ? (

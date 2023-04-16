@@ -1,31 +1,25 @@
 import { Button, Form, Input } from "antd";
-import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useMutation } from "react-query";
 import { login } from "../../api/login";
 import { userStore } from "../../store";
 import styles from "./index.module.scss";
 
 export default function LoginForm(props: { goRegister: () => void }) {
   const [form] = Form.useForm();
-  const { refetch, isFetching, data, isSuccess } = useQuery({
-    queryKey: ["login"],
-    queryFn: () => {
+  const loginMutation = useMutation({
+    mutationFn: () => {
       const { username, password } = form.getFieldsValue();
       return login(username, password);
     },
-    enabled: false,
+    onSuccess: (data) => {
+      const { user, token, expire } = data;
+      const userid = user._id;
+      userStore.userid = userid;
+      userStore.token = token;
+      userStore.userAccount = user.username;
+      userStore.expire = expire;
+    },
   });
-
-  if (isSuccess) {
-    const { user, token, expire } = data as any;
-    const userid = user._id;
-    userStore.userid = userid;
-    userStore.token = token;
-    userStore.userAccount = user.username;
-    userStore.expire = expire;
-    // navigate("/dashboard");
-    // return null;
-  }
 
   return (
     <div className={styles.form}>
@@ -39,11 +33,11 @@ export default function LoginForm(props: { goRegister: () => void }) {
         <Form.Item>
           <div className={styles.btnGroup}>
             <Button
-              loading={isFetching}
+              loading={loginMutation.isLoading}
               type="primary"
               className={styles.btn}
               onClick={() => {
-                refetch();
+                loginMutation.mutate();
               }}
             >
               登录
@@ -53,7 +47,7 @@ export default function LoginForm(props: { goRegister: () => void }) {
             </Button>
           </div>
         </Form.Item>
-        <div className={styles.forget}>忘记密码</div>
+        {/* <div className={styles.forget}>忘记密码</div> */}
       </Form>
     </div>
   );
