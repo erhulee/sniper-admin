@@ -3,7 +3,7 @@ function Loading(props: { content?: string }) {
 
   return (
     <div
-      className="w-full h-full flex-1 flex justify-center items-center flex-col bg-white  p-8"
+      className="w-full min-h-full flex-1 flex justify-center items-center flex-col bg-white  p-8"
       title="5"
     >
       <svg

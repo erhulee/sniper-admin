@@ -36,10 +36,18 @@ function ErrorListTable(props: {
         dataSource={props.data}
         renderItem={(item) => (
           <List.Item>
-            <div className="w-full flex items-start justify-between">
-              <div>
-                <div className=" flex">
-                  <div className="font-semibold text-primary-500 ">
+            <div className="w-full flex items-center justify-between ">
+              <div className=" w-5/12 flex-1 ">
+                <div className=" flex ">
+                  <div
+                    className="font-semibold text-primary-500 "
+                    style={{
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      flex: 1,
+                    }}
+                  >
                     {item.name}
                   </div>
                   {item.detail && (
@@ -50,7 +58,7 @@ function ErrorListTable(props: {
                           textOverflow: "ellipsis",
                           overflow: "hidden",
                           whiteSpace: "nowrap",
-                          maxWidth: "300px",
+                          flex: 1,
                         }}
                       >
                         {item.detail}
@@ -67,7 +75,7 @@ function ErrorListTable(props: {
                 </div>
               </div>
               <div
-                className="h-2/4 mx-8 w-2/5 rounded-lg "
+                className="h-2/4  w-2/5 rounded-lg  mx-4 "
                 style={{ backgroundColor: "#E9EBF7" }}
               >
                 <Column
@@ -97,17 +105,17 @@ function ErrorListTable(props: {
                   height={50}
                 />
               </div>
+              {item.type === "运行错误" && (
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    navigate(`/dashboard/error/js?issueId=${item.id}`);
+                  }}
+                >
+                  去处理
+                </Button>
+              )}
             </div>
-            {item.type === "运行错误" && (
-              <Button
-                type="primary"
-                onClick={() => {
-                  navigate(`/dashboard/error/js?issueId=${item.id}`);
-                }}
-              >
-                去处理
-              </Button>
-            )}
           </List.Item>
         )}
       />

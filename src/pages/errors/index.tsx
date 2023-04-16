@@ -33,10 +33,13 @@ function ErrorChart(props: { data: any[] }) {
     },
   };
   return (
-    <div className=" h-96">
+    <div className="">
+      <div className=" text-xl font-semibold mb-4">错误概览</div>
       <Area
+        smooth={true}
+        className=" h-96"
         {...config}
-        height={400}
+        height={380}
         legend={{
           itemName: {
             formatter: (text: any) => {
@@ -159,23 +162,23 @@ function Errors() {
 
   const activeQuery = queryMap[activeTab];
   return (
-    <div className={`${styles.page} bg-white p-8 min-h-full`}>
-      {/* <QueryOuter queryClient={[activeQuery, trendQuery]}> */}
-      <ErrorChart
-        data={(trendQuery.data?.data || []).map((i) => ({
-          ...i,
-          datestamp: dayjs(i.datestamp).format("MM-DD HH时"),
-        }))}
-      ></ErrorChart>
-      <Tabs
-        activeKey={activeTab}
-        items={items}
-        onChange={(e) => {
-          setActiveTab(e);
-        }}
-      ></Tabs>
-      <ErrorListTable data={activeQuery.data?.data || []}></ErrorListTable>
-      {/* </QueryOuter> */}
+    <div className={`${styles.page} bg-white p-8 flex flex-col min-h-full`}>
+      <QueryOuter queryClient={[activeQuery, trendQuery]}>
+        <ErrorChart
+          data={(trendQuery.data?.data || []).map((i) => ({
+            ...i,
+            datestamp: dayjs(i.datestamp).format("MM-DD HH时"),
+          }))}
+        ></ErrorChart>
+        <Tabs
+          activeKey={activeTab}
+          items={items}
+          onChange={(e) => {
+            setActiveTab(e);
+          }}
+        ></Tabs>
+        <ErrorListTable data={activeQuery.data?.data || []}></ErrorListTable>
+      </QueryOuter>
     </div>
   );
 }
