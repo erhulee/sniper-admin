@@ -15,6 +15,8 @@ import LogoIcon from "@/assets/icons/LogoIcon";
 import { useRef } from "react";
 import { CopyOutlined } from "@ant-design/icons";
 import ProjectListDrawer from "./project-list-drawer";
+import ClipboardJS from "clipboard";
+import useClipBoard from "@/hooks/useClipBoard";
 const { Header } = Layout;
 
 export default function PageHeader() {
@@ -54,6 +56,9 @@ export default function PageHeader() {
       closeDrawer();
     }
   };
+  useClipBoard("#btn", () => {
+    message.success("appid 已经复制到粘贴板");
+  });
 
   useEffect(() => {
     refetch();
@@ -122,14 +127,10 @@ export default function PageHeader() {
             value={filter.selectedProject?._id}
           ></Select>
           <Button
+            id="btn"
             icon={<CopyOutlined />}
-            onClick={() => {
-              navigator.clipboard.writeText(
-                globalFilterStore.selectedProject?._id ?? ""
-              );
-              message.success("appid 已经复制到粘贴板");
-            }}
             className="mx-4"
+            data-clipboard-text={globalFilterStore.selectedProject?._id ?? ""}
           ></Button>
           <Dropdown menu={{ items: item }} arrow={true}>
             <MenuFoldOutlined className=" text-white text-2xl" />
