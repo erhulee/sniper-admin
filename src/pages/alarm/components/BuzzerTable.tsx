@@ -1,57 +1,78 @@
-import {
-  BuzzerParams,
-  BuzzerStatus,
-  deleteBuzzer,
-  queryBuzzer,
-  updateBuzzer,
-} from "@/api/alaram";
-import { ReturnAPIResultType } from "@/pages/types";
+import { addBuzzer, Buzzer, deleteBuzzer, updateBuzzer } from "@/api/alaram";
+import useModal from "@/hooks/useModal";
 import { Button, Switch, Table, Tag } from "antd";
 import dayjs from "dayjs";
+import { cloneDeep } from "lodash";
+import { useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import AlarmDrawer from "./alarm-drawer";
 import { Rule } from "./Rule";
+function generateTableData(data?: Buzzer[]) {
+  if (data == null) return;
+  const tableData = data.map((item) => {
+    return {
+      bid: item._id!,
+      title: item.name,
+      notify: item.notifyType,
+      rule: item.rule,
+      createTime: dayjs(item.createTime).format("YYYY-MM-DD HH时"),
+      status: item.status,
+    };
+  });
+  return tableData;
+}
 
 export default function BuzzerTable(props: {
-  data: ({
-    _id: string;
-  } & BuzzerParams)[];
+  data: Buzzer[];
   refetch: Function;
 }) {
-  function generateTableData(
-    data?: ReturnAPIResultType<typeof queryBuzzer>["data"]
-  ) {
-    if (data == null) return;
-    const tableData = data.map((item) => {
-      return {
-        bid: item._id,
-        title: item.name,
-        notify: item.notifyType,
-        rule: item.rule,
-        createTime: dayjs(item.createTime).format("YYYY-MM-DD HH时"),
-        status: item.status,
-      };
-    });
-
-    return tableData;
-  }
-
+  const [visible, open, close] = useModal();
+  const queryClient = useQueryClient();
+  const { data, refetch } = props;
+  // 判断现在是 编辑还是新增
+  const [editingBuzzer, setEditBuzzer] = useState<Buzzer | null>(null);
+  const updateMutation = useMutation({
+    mutationFn: updateBuzzer,
+    onMutate: (buzzerData) => {
+      queryClient.setQueryData(["buzzer_list"], (buzzer_list) => {
+        const data: any = cloneDeep(buzzer_list) as any[];
+        const list: any[] = data.data;
+        const index = list.findIndex((item) => item._id == buzzerData._id);
+        list.splice(index, 1, buzzerData);
+        return data;
+      });
+    },
+  });
   async function handleDeleteBuzzer(id: string) {
     await deleteBuzzer({ _id: id });
-    props.refetch();
+    refetch();
   }
 
+  async function handleSaveBuzzer(
+    buzzerData: Omit<Buzzer, "appid" | "notifyType" | "createTime">
+  ) {
+    if (editingBuzzer !== null) {
+      // 编辑
+      await updateMutation.mutateAsync({
+        ...buzzerData,
+        _id: editingBuzzer._id,
+      });
+    } else {
+      // 新增
+      await addBuzzer(buzzerData);
+      refetch();
+    }
+    close();
+  }
+
+  async function handleSwitchStatus(bid: string, status: boolean) {
+    const newStats = cloneDeep(data.find((item) => item._id === bid))!;
+    newStats.status = status;
+    updateBuzzer(newStats);
+    await updateMutation.mutateAsync(newStats);
+  }
   return (
     <div className=" mt-4 bg-primary-20 flex flex-col bg-white flex-1 rounded-lg border-2 border-gray-100    ">
-      {/* <div className=" flex justify-end bg-primary-900 p-2 pr-4 ">
-        <Button size="small" type="primary" className=" mr-2">
-          添加
-        </Button>
-        <Button
-          size="small"
-          className=" bg-red-500 text-white hover:bg-red-400 "
-        >
-          删除
-        </Button>
-      </div> */}
       <div className="flex-1 h-full ">
         <Table
           dataSource={generateTableData(props.data)}
@@ -82,13 +103,9 @@ export default function BuzzerTable(props: {
               render: (value: any, record: any) => {
                 return (
                   <Switch
-                    defaultChecked={value}
-                    // checked={value}
-                    onChange={(v) => {
-                      updateBuzzer(
-                        record.bid,
-                        v ? BuzzerStatus.enable : BuzzerStatus.disable
-                      );
+                    checked={value}
+                    onChange={(checked) => {
+                      handleSwitchStatus(record.bid, checked);
                     }}
                   ></Switch>
                 );
@@ -105,9 +122,31 @@ export default function BuzzerTable(props: {
             {
               dataIndex: "",
               width: 2,
+              title: () => (
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setEditBuzzer(null);
+                    open();
+                  }}
+                >
+                  添加
+                </Button>
+              ),
               render: (value, record) => (
                 <div className=" flex">
-                  <Button size="small" type="primary" className="mr-2">
+                  <Button
+                    size="small"
+                    type="primary"
+                    className="mr-2"
+                    onClick={() => {
+                      setEditBuzzer(
+                        data.find((item) => item._id == record.bid)!
+                      );
+                      console.log(data.find((item) => item._id == record.bid)!);
+                      open();
+                    }}
+                  >
                     编辑
                   </Button>
                   <Button
@@ -123,6 +162,16 @@ export default function BuzzerTable(props: {
           ]}
         ></Table>
       </div>
+      <AlarmDrawer
+        visible={visible}
+        save={(data) => {
+          close();
+          handleSaveBuzzer(data);
+        }}
+        close={close}
+        formValue={editingBuzzer}
+      ></AlarmDrawer>
+      ;
     </div>
   );
 }

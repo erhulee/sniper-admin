@@ -34,30 +34,27 @@ function AlarmPage() {
       data: [],
     },
   });
-  const BuzzerListQuery = useQuery({
+  const buzzerListQuery = useQuery({
     queryKey: ["buzzer_list"],
     queryFn: queryBuzzer,
     initialData: { success: true, data: [] },
   });
 
-  const [visible, open, close] = useModal();
   useRegisterGlobalFilter(() => {
     barChartQuery.refetch();
     alarmListQuery.refetch();
-    BuzzerListQuery.refetch();
+    buzzerListQuery.refetch();
   });
   return (
     <div className=" flex justify-between  min-h-full h-full overflow-visible ">
       <div className=" mr-6 flex-1 h-full flex flex-col w-28">
         <QueryOuter
-          isError={BuzzerListQuery.isError || barChartQuery.isError}
-          isSuccess={BuzzerListQuery.isSuccess && barChartQuery.isSuccess}
-          isFetching={BuzzerListQuery.isFetching || barChartQuery.isFetching}
+          queryClient={[barChartQuery, alarmListQuery, buzzerListQuery]}
         >
           <AlarmChart data={barChartQuery.data?.data ?? []}></AlarmChart>
           <BuzzerTable
-            data={BuzzerListQuery.data?.data ?? []}
-            refetch={BuzzerListQuery.refetch}
+            data={buzzerListQuery.data?.data ?? []}
+            refetch={buzzerListQuery.refetch}
           ></BuzzerTable>
         </QueryOuter>
       </div>
@@ -73,14 +70,6 @@ function AlarmPage() {
           ></AlarmList>
         </QueryOuter>
       </div>
-
-      <AlarmDrawer
-        visible={visible}
-        close={() => {
-          close();
-          BuzzerListQuery.refetch();
-        }}
-      ></AlarmDrawer>
     </div>
   );
 }

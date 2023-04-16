@@ -1,4 +1,4 @@
-import { addBuzzer } from "@/api/alaram";
+import { Buzzer } from "@/api/alaram";
 import {
   Button,
   Col,
@@ -10,17 +10,27 @@ import {
   Select,
   Switch,
 } from "antd";
+import { pick } from "lodash";
+import { useEffect } from "react";
 import { conditionOptions, operator } from "../constants";
 const Item = Form.Item;
 const useForm = Form.useForm;
-
-function AlarmDrawer(props: { visible: boolean; close: () => void }) {
+// 负责 增/改 -> save 的入参是一整个对象
+function AlarmDrawer(props: {
+  visible: boolean;
+  close: () => void;
+  save: (
+    buzzerData: Omit<Buzzer, "appid" | "notifyType" | "createTime">
+  ) => void;
+  // 初始化
+  formValue: Buzzer | null;
+}) {
   const [form] = useForm();
-  const handleSave = async () => {
-    await addBuzzer(form.getFieldsValue());
-    form.resetFields();
-    props.close();
-  };
+  useEffect(() => {
+    form.setFieldsValue(
+      pick(props.formValue, "name", "rule", "webhook", "status")
+    );
+  }, [props.formValue]);
   return (
     <div>
       <Drawer
@@ -69,7 +79,13 @@ function AlarmDrawer(props: { visible: boolean; close: () => void }) {
             <Input></Input>
           </Item>
           <Item>
-            <Button className=" w-full" type="primary" onClick={handleSave}>
+            <Button
+              className=" w-full"
+              type="primary"
+              onClick={() => {
+                props.save(form.getFieldsValue());
+              }}
+            >
               保存
             </Button>
           </Item>

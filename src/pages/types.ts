@@ -15,7 +15,7 @@ export type AlarmRule = {
   webhook: string
 }
 
-export type Buzzer = {
+export type BuzzerItem = {
   bid: string
   title: string
   rule: AlarmRule

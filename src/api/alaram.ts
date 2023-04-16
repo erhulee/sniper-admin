@@ -9,24 +9,20 @@ export enum SupportRuleName {
     CLS,
     FCP
 }
-
 export enum AlarmOperator {
     bg, // big
     ls, // less
     eq // equal
 }
-
 export enum NotifyType {
     Lark
 }
-
 export enum BuzzerStatus {
     disable = 0,
     enable = 1
 }
-
-
-export type BuzzerParams = {
+export interface Buzzer {
+    _id?: string
     appid: string
     name: string
     rule: {
@@ -55,22 +51,29 @@ export type Alarm = {
     timedate: number
 }
 
-
-export function addBuzzer(params: Omit<BuzzerParams, "appid" | "notifyType" | "createTime">) {
+export function addBuzzer(params: Omit<Buzzer, "appid" | "notifyType" | "createTime">) {
     return axios.post("/addBuzzer", params)
 }
-
 export function queryBuzzer(): Promise<{
     data: Array<{
         _id: string,
-    } & BuzzerParams>,
+    } & Buzzer>,
     success: boolean
 }> {
     return axios.post("/queryBuzzer")
 }
-
 export function deleteBuzzer(params: { _id: string }) {
     return axios.post("/deleteBuzzer", params)
+}
+export function updateBuzzer(params: Omit<Buzzer, "appid" | "notifyType" | "createTime">) {
+    return axios.post("/updateBuzzer", params)
+}
+
+export const BuzzerApi = {
+    addBuzzer,
+    queryBuzzer,
+    deleteBuzzer,
+    updateBuzzer
 }
 
 export function queryAlarms(params: {
@@ -93,9 +96,3 @@ export function queryCurrentAlarms(): Promise<{
     return axios.post("/searchAlarams")
 }
 
-export function updateBuzzer(buzzerid: string, status: BuzzerStatus) {
-    return axios.post("/updateBuzzer", {
-        buzzerid,
-        status
-    })
-}

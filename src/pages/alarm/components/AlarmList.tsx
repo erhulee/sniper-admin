@@ -1,6 +1,6 @@
 import { Button, List } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
-import ButtonGroup from "antd/es/button/button-group";
+// import ButtonGroup from "antd/es/button/button-group";
 import { Alarm } from "@/api/alaram";
 import { Rule } from "./Rule";
 
@@ -30,11 +30,11 @@ export default function AlarmList(props: {
         <div className=" text-primary-900 font-semibold text-base">
           今日告警
         </div>
-        <ButtonGroup>
+        {/* <ButtonGroup>
           <Button type="primary" onClick={props.openModal}>
             添加
           </Button>
-        </ButtonGroup>
+        </ButtonGroup> */}
       </div>
 
       <List
