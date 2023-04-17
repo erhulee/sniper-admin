@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "antd/dist/reset.css";
-import { ConfigProvider } from "antd";
 import "tailwindcss/tailwind.css";
 import "./index.scss";
 
+import { ConfigProvider } from "antd";
 import initAxios from "./api/http";
 
 initAxios();
@@ -20,9 +20,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import App from "./app";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  // 提供client
   <QueryClientProvider client={queryClient}>
-    {/* 添加devtools */}
     {process.env.NODE_ENV === "development" ? (
       <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
     ) : (

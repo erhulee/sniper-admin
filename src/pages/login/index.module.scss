@@ -11,8 +11,8 @@
       2.3px 1.9px 20px rgba(0, 0, 0, 0.023),
       2.9px 2.3px 20px rgba(0, 0, 0, 0.047), 5px 4px 20px rgba(0, 0, 0, 0.11);
     top: -10vh;
-    width: 700px;
-    padding: 50px 150px;
+    max-width: 700px;
+    width: 30%;
     border: 1px solid rgb(233, 233, 233);
     border-left: 50px solid #3b3c81;
 
@@ -34,9 +34,16 @@
       }
     }
   }
-  :global {
-    .ant-form-item-label label {
-      font-weight: bold;
+}
+
+:global {
+  .ant-form-item-label label {
+    font-weight: bold;
+  }
+
+  @media screen and (max-width: 1440px) {
+    .ant-layout-header {
+      height: 42px !important;
     }
   }
 }

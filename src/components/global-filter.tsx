@@ -22,7 +22,7 @@ function GlobalFilter() {
       <div className=" flex my-4 justify-between items-center">
         <RangePicker
           size="small"
-          placement="bottomLeft"
+          placement="topLeft"
           className="h-10"
           placeholder={["开始时间", "结束时间"]}
           value={[globalFilterSnap.startDate, globalFilterSnap.endDate]}
@@ -33,7 +33,6 @@ function GlobalFilter() {
             }
           }}
         />
-
         <Breadcrumb style={{ margin: "16px 0" }}>
           {breadcrumb.map((i) => (
             <Breadcrumb.Item key={i}>{i}</Breadcrumb.Item>

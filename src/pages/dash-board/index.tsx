@@ -30,7 +30,6 @@ const DashBoard: React.FC = () => {
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}
             collapsible
-            width={200}
             style={{ background: colorBgContainer }}
           >
             <Menu

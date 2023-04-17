@@ -22,7 +22,7 @@ export default function LoginForm(props: { goRegister: () => void }) {
   });
 
   return (
-    <div className={styles.form}>
+    <div className=" max-w-sm w-3/4">
       <Form form={form}>
         <Form.Item label="账号" name="username" initialValue={"admin"}>
           <Input></Input>

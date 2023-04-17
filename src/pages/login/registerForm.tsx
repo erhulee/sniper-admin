@@ -24,7 +24,7 @@ export default function RegisterForm(props: { goLogin: () => void }) {
   });
 
   return (
-    <div className={styles.form}>
+    <div className="max-w-sm w-3/4">
       <Form labelCol={{ span: 6 }} labelAlign="left" form={form}>
         <Form.Item
           label="账号"

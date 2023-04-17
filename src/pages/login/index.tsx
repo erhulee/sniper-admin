@@ -8,11 +8,13 @@ export default function Login() {
   useAuth();
   return (
     <div className={`${styles.page}`}>
-      {isLoginStage ? (
-        <LoginForm goRegister={() => setIsLoginStage(false)}></LoginForm>
-      ) : (
-        <RegisterForm goLogin={() => setIsLoginStage(true)}></RegisterForm>
-      )}
+      <div className={`${styles.form} flex justify-center items-center py-7`}>
+        {isLoginStage ? (
+          <LoginForm goRegister={() => setIsLoginStage(false)}></LoginForm>
+        ) : (
+          <RegisterForm goLogin={() => setIsLoginStage(true)}></RegisterForm>
+        )}
+      </div>
     </div>
   );
 }
