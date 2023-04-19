@@ -1,4 +1,4 @@
-import { Modal, Upload } from "antd";
+import { Button, Modal, Upload } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import { uploadSourceMap } from "@/api/error";
 import { globalFilterStore } from "@/store";
@@ -34,6 +34,11 @@ function UploadModal(props: {
       onOk={handleSave}
       okText="上传"
       cancelText="取消"
+      footer={
+        <Button loading={loading} onClick={handleSave} type="primary">
+          上传
+        </Button>
+      }
     >
       <Dragger
         beforeUpload={(file) => {
