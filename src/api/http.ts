@@ -4,7 +4,7 @@ import { userStore } from '../store'
 import { globalFilterStore } from '../store/globalFilter'
 
 export default function initAxios() {
-  axios.defaults.baseURL = 'https://bdul0j.laf.dev'
+  axios.defaults.baseURL = 'https://le4njr.laf.run'
   axios.interceptors.request.use(
     (req) => {
       // token 挂载

@@ -1,25 +1,17 @@
-import { Button, Drawer } from "antd";
-import { List } from "antd";
+import { Drawer } from "antd";
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 import { PDFViewer, Font } from "@react-pdf/renderer";
-type DataType = { id: string; content: string };
-type Props = {
-  list: Array<DataType>;
-  onDelete: (id: string) => void;
-  onAdd: () => void;
-  visible: boolean;
-  close: () => void;
-};
-import alibabaFont from "../../../assets/font/NotoSansSC-Regular.otf";
+import NotoSansSCFont from "../../../assets/font/NotoSansSC-Regular.otf";
 import dayjs from "dayjs";
+import { PDFList, PDFTable } from "@/components/pdf-components";
 Font.register({
-  family: "alibaba",
+  family: "NotoSansSC",
   fonts: [
     {
-      src: alibabaFont,
+      src: NotoSansSCFont,
     },
     {
-      src: alibabaFont,
+      src: NotoSansSCFont,
       fontWeight: "Bold",
     },
   ],
@@ -28,10 +20,11 @@ const pdfStyles = StyleSheet.create({
   page: {
     flexDirection: "row",
     backgroundColor: "#fff",
-    fontFamily: "alibaba",
+    fontFamily: "NotoSansSC",
   },
   title: {
     fontSize: 20,
+    flex: 0,
   },
   subtitle: {
     fontSize: 15,
@@ -45,81 +38,7 @@ const pdfStyles = StyleSheet.create({
     justifyContent: "space-between",
   },
 });
-function PDFTable(props: {
-  rowHead: string[];
-  colHead: string[];
-  data: (string | number)[][];
-}) {
-  function createCell(content: string | number) {
-    return (
-      <Text
-        style={{
-          flex: 1,
-          textAlign: "center",
-        }}
-      >
-        {content}
-      </Text>
-    );
-  }
-  const { rowHead = [], colHead = [], data = [] } = props;
-  return (
-    <View
-      style={{
-        marginTop: 5,
-        border: "1px solid #eee",
-        paddingBottom: 5,
-      }}
-    >
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-around",
-          backgroundColor: "#eee",
-          fontSize: 14,
-        }}
-      >
-        {createCell("")}
-        {rowHead.map((content) => createCell(content))}
-      </View>
-      {data.map((rowData, index) => {
-        return (
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-around",
-              fontSize: 14,
-            }}
-          >
-            {rowData.reduce(
-              (pre, content) => {
-                pre.push(createCell(content));
-                return pre;
-              },
-              [createCell(colHead[index])]
-            )}
-          </View>
-        );
-      })}
-    </View>
-  );
-}
 
-function PDFList(props: {
-  head: () => React.ReactNode;
-  render: (item: any) => React.ReactNode;
-  data: any[];
-}) {
-  const { head, render, data = [] } = props;
-  return (
-    <View>
-      {head()}
-      {(data || []).map((item) => render(item))}
-    </View>
-  );
-}
 function PDFDrawer(props: { data: any; visible: boolean; close: Function }) {
   const renderListItem = (item: { message: string; count: number }) => {
     return (
@@ -143,6 +62,60 @@ function PDFDrawer(props: { data: any; visible: boolean; close: Function }) {
       </View>
     );
   };
+  const renderListHead = (contents: string[]) => (
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        fontSize: 12,
+        padding: 5,
+        backgroundColor: "#eee",
+      }}
+    >
+      {contents.map((item, index, array) => (
+        <Text
+          style={
+            index == array.length - 1
+              ? {
+                  width: 100,
+                  textAlign: "left",
+                }
+              : { flex: 1 }
+          }
+        >
+          {item}
+        </Text>
+      ))}
+    </View>
+  );
+  const pdfTitle = dayjs(Date.now()).format("YYYY年MM月DD日") + "质量报告";
+  const pdfListRenders = [
+    {
+      title: "运行时错误",
+      path: "jsError",
+      listHead: ["报错信息", "发生次数"],
+    },
+    {
+      title: "网络接口错误",
+      path: "httpError",
+      listHead: ["错误API地址", "发生次数"],
+    },
+    {
+      title: "静态资源错误",
+      path: "resourceError",
+      listHead: ["资源地址", "发生次数"],
+    },
+    {
+      title: "页面崩溃",
+      path: "crashError",
+      listHead: ["崩溃网页地址", "发生次数"],
+    },
+    {
+      title: "告警情况",
+      path: "alarmReport",
+      listHead: ["告警名称", "发生次数"],
+    },
+  ];
   return (
     <Drawer open={props.visible} title="站点管理" onClose={() => props.close()}>
       <PDFViewer
@@ -152,167 +125,29 @@ function PDFDrawer(props: { data: any; visible: boolean; close: Function }) {
           height: "100vh",
         }}
       >
-        <Document
-          title={dayjs(Date.now()).format("YYYY年MM月DD日") + "质量报告"}
-        >
+        <Document title={pdfTitle}>
           <Page size="A4" style={pdfStyles.page}>
             <View style={pdfStyles.section}>
-              <Text style={pdfStyles.title}>
-                {dayjs(Date.now()).format("YYYY年MM月DD日") + "质量报告"}
-              </Text>
-              <View>
-                <Text style={pdfStyles.subtitle}> 运行时错误</Text>
-                <View style={{ margin: "5px 10px", border: "1px solid #eee" }}>
-                  <PDFList
-                    data={props.data.jsError}
-                    head={() => (
-                      <View
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          fontSize: 12,
-                          padding: 5,
-                          backgroundColor: "#eee",
-                        }}
-                      >
-                        <Text style={{ flex: 1 }}>报错信息</Text>
-                        <Text
-                          style={{
-                            width: 100,
-                            textAlign: "left",
-                          }}
-                        >
-                          发生次数
-                        </Text>
-                      </View>
-                    )}
-                    render={renderListItem}
-                  />
+              <Text style={pdfStyles.title}>{pdfTitle}</Text>
+              {/* 展示一些数据 */}
+              {pdfListRenders.map(({ title, path, listHead }) => (
+                <View>
+                  <Text style={pdfStyles.subtitle}>{title}</Text>
+                  <View
+                    style={{ margin: "5px 10px", border: "1px solid #eee" }}
+                  >
+                    <PDFList
+                      data={props.data[path]}
+                      head={() => renderListHead(listHead)}
+                      render={renderListItem}
+                    />
+                  </View>
                 </View>
-              </View>
-              <View>
-                <Text style={pdfStyles.subtitle}> 网络接口错误</Text>
-                <View style={{ margin: "5px 10px", border: "1px solid #eee" }}>
-                  <PDFList
-                    data={props.data.httpError}
-                    head={() => (
-                      <View
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          fontSize: 12,
-                          padding: 5,
-                          backgroundColor: "#eee",
-                        }}
-                      >
-                        <Text style={{ flex: 1 }}>错误API地址</Text>
-                        <Text
-                          style={{
-                            width: 100,
-                            textAlign: "left",
-                          }}
-                        >
-                          发生次数
-                        </Text>
-                      </View>
-                    )}
-                    render={renderListItem}
-                  />
-                </View>
-              </View>
-              <View>
-                <Text style={pdfStyles.subtitle}> 静态资源错误</Text>
-                <View style={{ margin: "5px 10px", border: "1px solid #eee" }}>
-                  <PDFList
-                    data={props.data.resourceError}
-                    head={() => (
-                      <View
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          fontSize: 12,
-                          padding: 5,
-                          backgroundColor: "#eee",
-                        }}
-                      >
-                        <Text style={{ flex: 1 }}>资源地址</Text>
-                        <Text
-                          style={{
-                            width: 100,
-                            textAlign: "left",
-                          }}
-                        >
-                          发生次数
-                        </Text>
-                      </View>
-                    )}
-                    render={renderListItem}
-                  />
-                </View>
-              </View>
-              <View>
-                <Text style={pdfStyles.subtitle}> 页面崩溃</Text>
-                <View style={{ margin: "5px 10px", border: "1px solid #eee" }}>
-                  <PDFList
-                    data={props.data.crashError}
-                    head={() => (
-                      <View
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          fontSize: 12,
-                          padding: 5,
-                          backgroundColor: "#eee",
-                        }}
-                      >
-                        <Text style={{ flex: 1 }}>崩溃网页地址</Text>
-                        <Text
-                          style={{
-                            width: 100,
-                            textAlign: "left",
-                          }}
-                        >
-                          发生次数
-                        </Text>
-                      </View>
-                    )}
-                    render={renderListItem}
-                  />
-                </View>
-              </View>
+              ))}
+
               <View>
                 <Text style={pdfStyles.subtitle}> 性能数据</Text>
                 <PDFTable {...(props?.data?.webvital || {})}></PDFTable>
-              </View>
-              <View>
-                <Text style={pdfStyles.subtitle}>告警情况</Text>
-                <View style={{ margin: "5px 10px", border: "1px solid #eee" }}>
-                  <PDFList
-                    data={props.data.alarmReport}
-                    head={() => (
-                      <View
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          fontSize: 12,
-                          padding: 5,
-                          backgroundColor: "#eee",
-                        }}
-                      >
-                        <Text style={{ flex: 1 }}>告警名称</Text>
-                        <Text
-                          style={{
-                            width: 100,
-                            textAlign: "left",
-                          }}
-                        >
-                          告警次数
-                        </Text>
-                      </View>
-                    )}
-                    render={renderListItem}
-                  />
-                </View>
               </View>
             </View>
           </Page>
@@ -322,3 +157,104 @@ function PDFDrawer(props: { data: any; visible: boolean; close: Function }) {
   );
 }
 export default PDFDrawer;
+export function getWebVitalTableData(data: Array<any>) {
+  const keysOrder = ["TTFB", "CLS", "FID", "LCP", "FCP"];
+  const colKeys = ["good", "needs-improvement", "bad"];
+  const tableData = new Array(colKeys.length)
+    .fill(0)
+    .map(() => new Array(keysOrder.length).fill(0));
+
+  data.forEach(({ category, path_performance }) => {
+    const colIndex = keysOrder.indexOf(category);
+    path_performance.forEach((item: any) => {
+      const { partition } = item;
+      colKeys.forEach((key, index) => {
+        const count = partition[key];
+        tableData[index][colIndex] += count;
+      });
+    });
+  });
+  return {
+    rowHead: keysOrder,
+    colHead: ["良好", "一般", "差劲"],
+    data: tableData,
+  };
+}
+export function getJSErrorReport(
+  data: Array<{
+    message: string;
+    loggers: Array<{ count: number }>;
+  }>
+) {
+  return data.map((item) => {
+    return {
+      message: item.message,
+      count: item.loggers.reduce((pre, cur) => pre + cur.count, 0),
+    };
+  });
+}
+export function getHTTPErrorReport(
+  data: Array<{
+    url: string;
+    trend: Array<{ count: number }>;
+  }>
+) {
+  return data.map((item) => ({
+    message: item.url,
+    count: item.trend.reduce((pre, cur) => pre + cur.count, 0),
+  }));
+}
+export function getCrashReport(
+  data: Array<{
+    path: string;
+    trend: Array<{ count: number }>;
+  }>
+) {
+  return data.map((item) => ({
+    message: item.path,
+    count: item.trend.reduce((pre, cur) => pre + cur.count, 0),
+  }));
+}
+export function getResourceReport(
+  data: Array<{
+    src: string;
+    trend: Array<{ count: number }>;
+  }>
+) {
+  return data.map((item) => ({
+    message: item.src,
+    count: item.trend.reduce((pre, cur) => pre + cur.count, 0),
+  }));
+}
+export function getAlarmReport(
+  data: Array<{
+    buzzerid: string;
+    buzzerName: string;
+  }>
+) {
+  return data
+    .reduce(
+      (
+        pre: Array<{ buzzerid: string; buzzerName: string; count: number }>,
+        cur
+      ) => {
+        const data = pre.find((item) => item.buzzerid == cur.buzzerid);
+        if (data == null) {
+          pre.push({
+            buzzerid: cur.buzzerid,
+            buzzerName: cur.buzzerName,
+            count: 0,
+          });
+          return pre;
+        } else {
+          data.count++;
+          return pre;
+        }
+      },
+      []
+    )
+    .map((item) => ({
+      message: item.buzzerName,
+      count: item.count,
+    }));
+}

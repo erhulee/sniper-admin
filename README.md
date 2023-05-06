@@ -1,11 +1,12 @@
 # 使用说明
+
 > 目前 npm / vite-plugin 方案还在测试中
 
-# 平台申请Appid
+# 平台申请 Appid
 
-新用户需要登录平台  [https://sniper-admin.vercel.app](https://sniper-admin.vercel.app/dashboard/performance)， 注册 / 登录后在右上角点击  + 号，申请一个项目ID（appid）
+新用户需要登录平台 [https://sniper-admin.vercel.app](https://sniper-admin.vercel.app/dashboard/performance)， 注册 / 登录后在右上角点击 + 号，申请一个项目 ID（appid）
 
-# SDK导入
+# SDK 导入
 
 💡 目前平台只支持 post 请求
 
@@ -24,7 +25,8 @@
 
 只有 appid 是必须填写的，可以简写 `var webMonitor = new window.WebMonitor("平台上申请的 appid"）`
 
-## 使用Vite插件一键导入
+## 使用 Vite 插件一键导入
+
 > 其核心原理也是使用的 cdn
 
 ```bash
@@ -50,7 +52,8 @@ export default defineConfig({
 
 这里的 endpoint 是自动上传 sourceMap 的地址
 
-## 使用NPM包
+## 使用 NPM 包
+
 ```bash
 yarn add sniper-web-monitor
 ```
@@ -63,3 +66,5 @@ const webMonitor = new WebMonitor(
          "xhr");
 WebMonitor.start();
 ```
+
+# 一些在实践的代码规范

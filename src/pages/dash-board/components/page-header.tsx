@@ -23,111 +23,18 @@ import {
   getResourceErrorInfo,
 } from "@/api/error";
 import { queryCurrentAlarms } from "@/api/alaram";
-import PDFDrawer from "./pdf-drawer";
+import PDFDrawer, {
+  getAlarmReport,
+  getCrashReport,
+  getHTTPErrorReport,
+  getJSErrorReport,
+  getResourceReport,
+  getWebVitalTableData,
+} from "./pdf-drawer";
 import { useState } from "react";
 import dayjs from "dayjs";
 const { Header } = Layout;
-function getWebVitalTableData(data: Array<any>) {
-  const keysOrder = ["TTFB", "CLS", "FID", "LCP", "FCP"];
-  const colKeys = ["good", "needs-improvement", "bad"];
-  const tableData = new Array(colKeys.length)
-    .fill(0)
-    .map(() => new Array(keysOrder.length).fill(0));
 
-  data.forEach(({ category, path_performance }) => {
-    const colIndex = keysOrder.indexOf(category);
-    path_performance.forEach((item: any) => {
-      const { partition } = item;
-      colKeys.forEach((key, index) => {
-        const count = partition[key];
-        tableData[index][colIndex] += count;
-      });
-    });
-  });
-  return {
-    rowHead: keysOrder,
-    colHead: ["良好", "一般", "差劲"],
-    data: tableData,
-  };
-}
-function getJSErrorReport(
-  data: Array<{
-    message: string;
-    loggers: Array<{ count: number }>;
-  }>
-) {
-  return data.map((item) => {
-    return {
-      message: item.message,
-      count: item.loggers.reduce((pre, cur) => pre + cur.count, 0),
-    };
-  });
-}
-function getHTTPErrorReport(
-  data: Array<{
-    url: string;
-    trend: Array<{ count: number }>;
-  }>
-) {
-  return data.map((item) => ({
-    message: item.url,
-    count: item.trend.reduce((pre, cur) => pre + cur.count, 0),
-  }));
-}
-function getCrashReport(
-  data: Array<{
-    path: string;
-    trend: Array<{ count: number }>;
-  }>
-) {
-  return data.map((item) => ({
-    message: item.path,
-    count: item.trend.reduce((pre, cur) => pre + cur.count, 0),
-  }));
-}
-function getResourceReport(
-  data: Array<{
-    src: string;
-    trend: Array<{ count: number }>;
-  }>
-) {
-  return data.map((item) => ({
-    message: item.src,
-    count: item.trend.reduce((pre, cur) => pre + cur.count, 0),
-  }));
-}
-function getAlarmReport(
-  data: Array<{
-    buzzerid: string;
-    buzzerName: string;
-  }>
-) {
-  return data
-    .reduce(
-      (
-        pre: Array<{ buzzerid: string; buzzerName: string; count: number }>,
-        cur
-      ) => {
-        const data = pre.find((item) => item.buzzerid == cur.buzzerid);
-        if (data == null) {
-          pre.push({
-            buzzerid: cur.buzzerid,
-            buzzerName: cur.buzzerName,
-            count: 0,
-          });
-          return pre;
-        } else {
-          data.count++;
-          return pre;
-        }
-      },
-      []
-    )
-    .map((item) => ({
-      message: item.buzzerName,
-      count: item.count,
-    }));
-}
 export default function PageHeader() {
   const filter = useSnapshot(globalFilterStore);
   const [visible, open, close] = useModal();
@@ -191,36 +98,40 @@ export default function PageHeader() {
     refetch();
   }, []);
   const exportReport = async () => {
-    // 混个需求罢了 -> 把所有的 api 都掉一次，主打一个能跑就行
-    const startDate = dayjs(Date.now()).startOf("day").valueOf();
-    const endDate = dayjs(Date.now()).endOf("day").valueOf();
-    setExportLoading(true);
-    const report = await Promise.all([
-      getWebVitals(startDate, endDate),
-      getJSErrorInfo(startDate, endDate),
-      getHTTPErrorInfo(startDate, endDate),
-      getCrashErrorInfo(startDate, endDate),
-      getResourceErrorInfo(startDate, endDate),
-      queryCurrentAlarms(),
-    ]);
+    try {
+      // 混个需求罢了 -> 把所有的 api 都掉一次，主打一个能跑就行
+      const startDate = dayjs(Date.now()).startOf("day").valueOf();
+      const endDate = dayjs(Date.now()).endOf("day").valueOf();
+      setExportLoading(true);
+      const report = await Promise.all([
+        getWebVitals(startDate, endDate),
+        getJSErrorInfo(startDate, endDate),
+        getHTTPErrorInfo(startDate, endDate),
+        getCrashErrorInfo(startDate, endDate),
+        getResourceErrorInfo(startDate, endDate),
+        queryCurrentAlarms(),
+      ]);
+      const webVitalData = getWebVitalTableData(report[0].data);
+      const jsErrorData = getJSErrorReport(report[1].data);
+      const httpErrorData = getHTTPErrorReport(report[2].data);
+      const crashErrorData = getCrashReport(report[3].data);
+      const resourceErrorData = getResourceReport(report[4].data);
+      const alarmsErrorData = getAlarmReport(report[5].data);
+      setPDFData({
+        webvital: webVitalData,
+        jsError: jsErrorData,
+        httpError: httpErrorData,
+        crashError: crashErrorData,
+        resourceError: resourceErrorData,
+        alarmReport: alarmsErrorData,
+      });
 
-    const webVitalData = getWebVitalTableData(report[0].data);
-    const jsErrorData = getJSErrorReport(report[1].data);
-    const httpErrorData = getHTTPErrorReport(report[2].data);
-    const crashErrorData = getCrashReport(report[3].data);
-    const resourceErrorData = getResourceReport(report[4].data);
-    const alarmsErrorData = getAlarmReport(report[5].data);
-
-    setPDFData({
-      webvital: webVitalData,
-      jsError: jsErrorData,
-      httpError: httpErrorData,
-      crashError: crashErrorData,
-      resourceError: resourceErrorData,
-      alarmReport: alarmsErrorData,
-    });
-    setExportLoading(false);
-    openPDF();
+      openPDF();
+    } catch {
+      message.error("导出失败");
+    } finally {
+      setExportLoading(false);
+    }
   };
 
   const item: MenuProps["items"] = [
