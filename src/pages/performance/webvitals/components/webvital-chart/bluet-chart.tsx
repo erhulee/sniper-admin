@@ -9,7 +9,7 @@ type BluetChartProps = {
 
 function BluetChart(props: BluetChartProps) {
   return (
-    <div className={`${props.className} flex flex-row h-5 `}>
+    <div className={`${props.className} flex flex-row h-4 `}>
       <div
         style={{
           backgroundColor: "#2BA185",

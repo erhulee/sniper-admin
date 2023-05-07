@@ -1,8 +1,5 @@
-import getBehavior, {
-  BehaviorCategory,
-  BehaviorData,
-  Trend,
-} from "@/api/behavior";
+import getBehavior from "@/api/behavior";
+import { BehaviorCategory, BehaviorData, Trend } from "@/api/types/behavior";
 import Loading from "@/components/loading";
 import useRegisterGlobalFilter from "@/hooks/useRegisterGlobalFilter";
 import { globalFilterStore } from "@/store";

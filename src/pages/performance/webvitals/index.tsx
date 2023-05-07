@@ -49,7 +49,11 @@ function PerformanceInner() {
                 [degree]: digitalFormat(count / countAll),
               }),
               {}
-            ),
+            ) as {
+              good: string;
+              ["needs-improvement"]: string;
+              bad: string;
+            },
             path_performance,
           };
         })
@@ -80,7 +84,7 @@ function PerformanceInner() {
       </div>
       <QueryOuter queryClient={query}>
         <div className=" grid grid-cols-2 gap-4">
-          {query.data?.map((cardData: any) => {
+          {query.data?.map((cardData) => {
             return (
               <WebVitalChart
                 key={cardData.title}

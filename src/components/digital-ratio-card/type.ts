@@ -1,4 +1,4 @@
-import { Impact, Trend } from "@/api/behavior";
+import { Impact, Trend } from "@/api/types/behavior";
 
 export type CoreData = {
     title: string,

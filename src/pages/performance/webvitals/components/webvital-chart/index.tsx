@@ -8,9 +8,9 @@ type WebVitalChartProps = {
   tooltip: string;
   name: string;
   proportion: {
-    good: number;
-    ["needs-improvement"]: number;
-    bad: number;
+    good: string;
+    ["needs-improvement"]: string;
+    bad: string;
   };
   trendData?: any;
   routeList?: any;
@@ -51,10 +51,7 @@ function PathItem(props: {
 function WebVitalChart(props: WebVitalChartProps) {
   const { title, tooltip, proportion, trendData, path_performance, name } =
     props;
-  const good = (proportion.good * 100).toFixed(0);
-  const general = (proportion["needs-improvement"] * 100).toFixed(0);
-  const bad = (proportion.bad * 100).toFixed(0);
-
+  const { bad, good, "needs-improvement": general } = proportion;
   return (
     <div className="bg-white py-4 px-4  border-solid border-2  rounded-md  border-gray-50">
       <div className="text-gray-default mb-4 flex items-center">
@@ -76,11 +73,13 @@ function WebVitalChart(props: WebVitalChartProps) {
         ></TrendChart>
       </div>
 
-      {path_performance
-        .filter((pathItem) => pathItem.path)
-        .map((pathItem, index) => (
-          <PathItem {...pathItem} rank={index + 1}></PathItem>
-        ))}
+      <div className="max-h-36 overscroll-auto">
+        {path_performance
+          .filter((pathItem) => pathItem.path)
+          .map((pathItem, index) => (
+            <PathItem {...pathItem} rank={index + 1}></PathItem>
+          ))}
+      </div>
     </div>
   );
 }

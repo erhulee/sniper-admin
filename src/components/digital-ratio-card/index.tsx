@@ -1,4 +1,4 @@
-import { Impact, Trend } from "@/api/behavior";
+import { Impact, Trend } from "@/api/types/behavior";
 import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 import { CoreData } from "./type";
 type Props = CoreData;
