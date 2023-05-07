@@ -15,8 +15,8 @@
     width: 30%;
     border: 1px solid rgb(233, 233, 233);
     border-left: 50px solid #3b3c81;
-
     border-radius: 5px;
+    min-width: 600px;
     .btnGroup {
       display: flex;
       .btn:first-of-type {

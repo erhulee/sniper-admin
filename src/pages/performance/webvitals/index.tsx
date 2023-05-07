@@ -1,82 +1,60 @@
 import { useQuery } from "react-query";
 import { useSnapshot } from "valtio";
 import { getWebVitals } from "@/api/performance";
-import dayjs from "dayjs";
-import Loading from "@/components/loading";
-import { GlobalMemoWrap } from "@/components/global-filter";
 import { tooltipsMap } from "./constant";
 import { globalFilterStore } from "@/store";
 import WebVitalChart from "./components/webvital-chart";
 import { useState } from "react";
 import { Select } from "antd";
-
-function computeProportion(trendData: any[]) {
-  const resultCount: any = {
-    good: 0,
-    ["needs-improvement"]: 0,
-    bad: 0,
-  };
-
-  let countAll = 0;
-  trendData.forEach((data) => {
-    const { degree, count } = data;
-    resultCount[degree] += count;
-    countAll += count;
-  });
-
-  return {
-    good: (resultCount.good / countAll).toFixed(2),
-    ["needs-improvement"]: (
-      resultCount["needs-improvement"] / countAll
-    ).toFixed(2),
-    bad: (resultCount.bad / countAll).toFixed(2),
-  };
-}
+import QueryOuter from "@/wrapper/QueryOuter";
+import { dateFormat, digitalFormat } from "@/utils";
+const webvitalCategory = ["TTFB", "CLS", "FID", "LCP", "FCP"];
 
 function PerformanceInner() {
   const globalFilterSnap = useSnapshot(globalFilterStore);
-
-  const [displayFilter, setDisplayFilter] = useState([
-    "TTFB",
-    "CLS",
-    "FID",
-    "LCP",
-    "FCP",
-  ]);
-  let cardsData: any = [];
-
+  const [displayFilter, setDisplayFilter] = useState(webvitalCategory);
+  const startDate = globalFilterStore.startDate.valueOf();
+  const endDate = globalFilterStore.endDate.valueOf();
   const query = useQuery({
-    queryKey: ["webvital", globalFilterSnap],
-    queryFn: ({ queryKey }) => {
-      const snap = queryKey[1];
-      if (typeof snap == "string") return;
-      const startDate = snap.startDate.valueOf();
-      const endDate = snap.endDate.valueOf();
-      return getWebVitals(startDate, endDate);
-    },
-  });
-
-  const { isSuccess, data, isFetching } = query;
-
-  if (isSuccess) {
-    const webVitals: any[] = data?.data;
-    cardsData = webVitals.map((webvital) => {
-      const { category, trendData, path_performance } = webvital;
-      return {
-        title: category,
-        name: tooltipsMap[category].name,
-        tooltip: tooltipsMap[category].detail,
-        trendData: trendData.map((data: any) => {
+    queryKey: ["webvital", globalFilterSnap, startDate, endDate],
+    queryFn: () => getWebVitals(startDate, endDate),
+    select: (response) =>
+      response?.data
+        ?.map((webvital) => {
+          const { trendData, category: title, path_performance } = webvital;
+          const countAll = trendData.reduce((p, c) => p + c.count, 0);
+          const countByDegree = trendData.reduce(
+            (p, c) => {
+              p[c.degree] += c.count;
+              return p;
+            },
+            {
+              good: 0,
+              ["needs-improvement"]: 0,
+              bad: 0,
+            }
+          );
+          const proportionEntry = Object.entries(countByDegree);
           return {
-            ...data,
-            date: dayjs(data.date).format("MM/DD-HH时"),
+            title,
+            name: tooltipsMap[title].name,
+            tooltip: tooltipsMap[title].detail,
+            trendData: trendData.map((data) => ({
+              ...data,
+              date: dateFormat(data.date),
+            })),
+            proportion: proportionEntry.reduce(
+              (pre, [degree, count]) => ({
+                ...pre,
+                [degree]: digitalFormat(count / countAll),
+              }),
+              {}
+            ),
+            path_performance,
           };
-        }),
-        proportion: computeProportion(trendData),
-        path_performance: path_performance,
-      };
-    });
-  }
+        })
+        .filter((i: any) => displayFilter.includes(i.title)),
+  });
 
   return (
     <div className="flex flex-col h-full">
@@ -91,43 +69,36 @@ function PerformanceInner() {
           mode="multiple"
           maxTagCount="responsive"
           value={displayFilter}
-          options={["TTFB", "CLS", "FID", "LCP", "FCP"].map((i) => ({
-            label: i,
-            value: i,
+          options={webvitalCategory.map((item) => ({
+            label: item,
+            value: item,
           }))}
           onChange={(e) => {
             setDisplayFilter(e);
           }}
         />
       </div>
-      {isFetching && <Loading></Loading>}
-      {!isFetching && isSuccess && (
+      <QueryOuter queryClient={query}>
         <div className=" grid grid-cols-2 gap-4">
-          {cardsData
-            .filter((i: any) => displayFilter.includes(i.title))
-            .map((cardData: any) => {
-              return (
-                <WebVitalChart
-                  key={cardData.title}
-                  title={cardData.title}
-                  name={cardData.name}
-                  tooltip={cardData.tooltip}
-                  proportion={cardData.proportion}
-                  trendData={cardData.trendData}
-                  path_performance={cardData.path_performance}
-                ></WebVitalChart>
-              );
-            })}
+          {query.data?.map((cardData: any) => {
+            return (
+              <WebVitalChart
+                key={cardData.title}
+                title={cardData.title}
+                name={cardData.name}
+                tooltip={cardData.tooltip}
+                proportion={cardData.proportion}
+                trendData={cardData.trendData}
+                path_performance={cardData.path_performance}
+              ></WebVitalChart>
+            );
+          })}
         </div>
-      )}
+      </QueryOuter>
     </div>
   );
 }
 
 export default function WebVitalPerformance() {
-  return (
-    <GlobalMemoWrap keys={["startDate", "endDate"]}>
-      <PerformanceInner />
-    </GlobalMemoWrap>
-  );
+  return <PerformanceInner />;
 }

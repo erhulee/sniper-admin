@@ -74,6 +74,35 @@ export default function RegisterForm(props: { goLogin: () => void }) {
         >
           <Input></Input>
         </Form.Item>
+        <Form.Item
+          label="邮箱"
+          name="email"
+          required
+          rules={[
+            {
+              required: true,
+              message: "请输入邮箱",
+            },
+          ]}
+        >
+          <Input></Input>
+        </Form.Item>
+        <Form.Item
+          label="验证码"
+          name="code"
+          required
+          rules={[
+            {
+              required: true,
+              message: "请输入验证码",
+            },
+          ]}
+        >
+          <div className=" flex">
+            <Input></Input>
+            <Button className="ml-4"> 获取验证码</Button>
+          </div>
+        </Form.Item>
         <Form.Item>
           <div className={styles.btnGroup}>
             <Button
