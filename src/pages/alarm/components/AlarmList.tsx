@@ -1,8 +1,7 @@
 import { Button, List } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
-// import ButtonGroup from "antd/es/button/button-group";
-import { Alarm } from "@/api/alaram";
 import { Rule } from "./Rule";
+import { Alarm } from "@/api/types/alaram";
 
 function AlarmItem(props: Alarm) {
   return (

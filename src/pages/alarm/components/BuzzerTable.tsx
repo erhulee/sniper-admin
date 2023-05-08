@@ -1,4 +1,5 @@
-import { addBuzzer, Buzzer, deleteBuzzer, updateBuzzer } from "@/api/alaram";
+import { addBuzzer, deleteBuzzer, updateBuzzer } from "@/api/alaram";
+import { Buzzer } from "@/api/types/buzzer";
 import useModal from "@/hooks/useModal";
 import { Button, Switch, Table, Tag } from "antd";
 import dayjs from "dayjs";
@@ -56,7 +57,7 @@ export default function BuzzerTable(props: {
       await updateMutation.mutateAsync({
         ...buzzerData,
         _id: editingBuzzer._id,
-      });
+      } as any);
     } else {
       // 新增
       await addBuzzer(buzzerData);

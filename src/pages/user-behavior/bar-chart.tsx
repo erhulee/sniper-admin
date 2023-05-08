@@ -1,4 +1,4 @@
-import { BehaviorData } from "@/api/behavior";
+import { BehaviorData } from "@/api/types/behavior";
 import { Column } from "@ant-design/plots";
 
 const StackBar = (props: { data: BehaviorData["barData"] }) => {

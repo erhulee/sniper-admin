@@ -1,10 +1,9 @@
+import { BehaviorData } from "@/api/types/behavior";
 import { Area } from "@ant-design/charts";
 
-import { BehaviorData } from "@/api/behavior";
-
-function TrendChart({ data }: { data: any[] }) {
+function TrendChart(props: { data: any[] }) {
   const config = {
-    data,
+    data: props.data,
     xField: "datatime",
     yField: "count",
   };

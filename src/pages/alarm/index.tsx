@@ -5,12 +5,17 @@ import BuzzerTable from "./components/BuzzerTable";
 import QueryOuter from "@/wrapper/QueryOuter";
 import { AlarmChart } from "./components/AlarmChart";
 import AlarmList from "./components/AlarmList";
-import AlarmDrawer from "./components/alarm-drawer";
-import useModal from "@/hooks/useModal";
 import useRegisterGlobalFilter from "@/hooks/useRegisterGlobalFilter";
 
 function AlarmPage() {
-  const barChartQuery = useQuery({
+  const barChartQuery = useQuery<
+    unknown,
+    unknown,
+    {
+      success: boolean;
+      data: any[];
+    }
+  >({
     queryKey: [
       "alarmsList",
       {
@@ -26,7 +31,14 @@ function AlarmPage() {
       data: [],
     },
   });
-  const alarmListQuery = useQuery({
+  const alarmListQuery = useQuery<
+    unknown,
+    unknown,
+    {
+      success: boolean;
+      data: any[];
+    }
+  >({
     queryKey: ["currentAlarms"],
     queryFn: queryCurrentAlarms,
     initialData: {

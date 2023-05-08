@@ -1,4 +1,4 @@
-import { AlarmOperator, SupportRuleName } from "@/api/alaram";
+import { AlarmOperator, SupportRuleName } from "@/api/types/buzzer";
 import { OperatorMap, SupportRuleNameMap } from "../constants";
 
 export function Rule(props: {

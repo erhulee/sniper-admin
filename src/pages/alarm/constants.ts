@@ -1,4 +1,4 @@
-import { AlarmOperator, SupportRuleName } from "@/api/alaram";
+import { AlarmOperator, SupportRuleName } from "@/api/types/buzzer";
 
 export const SupportRuleNameMap = {
     [SupportRuleName.JS_ERROR]: "JS错误个数",

@@ -1,4 +1,4 @@
-import { Buzzer } from "@/api/alaram";
+import { Buzzer } from "@/api/types/buzzer";
 import {
   Button,
   Col,
