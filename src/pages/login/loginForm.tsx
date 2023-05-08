@@ -4,7 +4,10 @@ import { login } from "../../api/login";
 import { userStore } from "../../store";
 import styles from "./index.module.scss";
 
-export default function LoginForm(props: { goRegister: () => void }) {
+export default function LoginForm(props: {
+  goRegister: () => void;
+  goReset: () => void;
+}) {
   const [form] = Form.useForm();
   const loginMutation = useMutation({
     mutationFn: () => {
@@ -28,7 +31,7 @@ export default function LoginForm(props: { goRegister: () => void }) {
           <Input></Input>
         </Form.Item>
         <Form.Item label="密码" name="password" initialValue={"1234"}>
-          <Input></Input>
+          <Input.Password></Input.Password>
         </Form.Item>
         <Form.Item>
           <div className={styles.btnGroup}>
@@ -47,7 +50,9 @@ export default function LoginForm(props: { goRegister: () => void }) {
             </Button>
           </div>
         </Form.Item>
-        {/* <div className={styles.forget}>忘记密码</div> */}
+        <div className={styles.forget} onClick={props.goReset}>
+          忘记密码
+        </div>
       </Form>
     </div>
   );

@@ -1,21 +1,20 @@
 import IntervalDisableButton from "@/components/interval-disable-button";
 import { Button, Form, Input } from "antd";
 import { useMutation } from "react-query";
-import { getCheckCode, register } from "../../api/login";
+import { getCheckCode, reset } from "../../api/login";
 import styles from "./index.module.scss";
-export default function RegisterForm(props: { goLogin: () => void }) {
+export default function ResetForm(props: { goLogin: () => void }) {
   const [form] = Form.useForm();
 
   const registerMutation = useMutation({
     mutationFn: async () => {
       try {
         await form.validateFields();
-        const username = form.getFieldValue("username");
         const password = form.getFieldValue("password");
         const password_confirm = form.getFieldValue("password_confirm");
         const email = form.getFieldValue("email");
         const checkCode = form.getFieldValue("code");
-        return register(username, password, password_confirm, email, checkCode);
+        return reset(password, password_confirm, email, checkCode);
       } catch (e) {
         throw e;
       }
@@ -34,18 +33,19 @@ export default function RegisterForm(props: { goLogin: () => void }) {
     <div className="max-w-sm w-3/4">
       <Form labelCol={{ span: 6 }} labelAlign="left" form={form}>
         <Form.Item
-          label="账号"
-          name="username"
+          label="邮箱"
+          name="email"
           required
           rules={[
             {
               required: true,
-              message: "请输入账号",
+              message: "请输入邮箱",
             },
           ]}
         >
           <Input></Input>
         </Form.Item>
+
         <Form.Item
           label="密码"
           name="password"
@@ -81,25 +81,11 @@ export default function RegisterForm(props: { goLogin: () => void }) {
         >
           <Input.Password></Input.Password>
         </Form.Item>
-        <Form.Item
-          label="邮箱"
-          name="email"
-          required
-          rules={[
-            {
-              required: true,
-              message: "请输入邮箱",
-            },
-          ]}
-        >
-          <Input></Input>
-        </Form.Item>
-        <Form.Item label="验证码">
+        <Form.Item label="验证码" required>
           <div className=" flex-row flex">
             <Form.Item
               className="mr-4"
               name="code"
-              required
               rules={[
                 {
                   required: true,
@@ -110,7 +96,7 @@ export default function RegisterForm(props: { goLogin: () => void }) {
               <Input className="mr-4"></Input>
             </Form.Item>
             <IntervalDisableButton
-              id="register_check_code"
+              id="reset_check_code"
               interval={60 * 1000}
               onClick={() => {
                 handleCheckCode();
@@ -120,7 +106,6 @@ export default function RegisterForm(props: { goLogin: () => void }) {
             </IntervalDisableButton>
           </div>
         </Form.Item>
-
         <Form.Item>
           <div className={styles.btnGroup}>
             <Button
@@ -129,7 +114,7 @@ export default function RegisterForm(props: { goLogin: () => void }) {
               htmlType="submit"
               onClick={() => registerMutation.mutate()}
             >
-              注册
+              重置
             </Button>
             <Button onClick={() => props.goLogin()}> 返回</Button>
           </div>
